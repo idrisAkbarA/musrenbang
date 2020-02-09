@@ -1,3 +1,4 @@
+## cara duplicate
 1. Copy your repo's URL. Ex: https://github.com/YourName/YourOldRepo (hint: it's the URL when you look at your repo's main page on github.
 2. Click the + icon in the top right corner.
 <p><img src="https://i.stack.imgur.com/9zJgo.png" width="400"></p>
