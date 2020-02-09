@@ -11,7 +11,7 @@ That's it! You now have a copy of the full repo, with all commit history and bra
 Limitations: It's not actually a real fork. It's a copy of the repo. It won't allow to do pull requests back and forth.
 
 =======================================================================
-##setelah di clone
+## setelah di clone
 1. composer install
 2. npm install
 3. buat file .env nya
