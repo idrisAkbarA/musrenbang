@@ -1,3 +1,4 @@
+## cara duplicate
 1. Copy your repo's URL. Ex: https://github.com/YourName/YourOldRepo (hint: it's the URL when you look at your repo's main page on github.
 2. Click the + icon in the top right corner.
 <p><img src="https://i.stack.imgur.com/9zJgo.png" width="400"></p>
@@ -10,6 +11,14 @@ Where it asks for the "Old URL", paste the URL you copied at step #1
 That's it! You now have a copy of the full repo, with all commit history and branches!
 Limitations: It's not actually a real fork. It's a copy of the repo. It won't allow to do pull requests back and forth.
 
+=======================================================================
+## setelah di clone
+1. composer install
+2. npm install
+3. buat file .env nya
+4. npm run watch
+5. buat kopi
+6. love you babe
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
 <p align="center">
