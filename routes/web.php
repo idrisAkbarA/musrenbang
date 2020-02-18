@@ -12,9 +12,15 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pengumuman');
+});
+Route::get('/login', function () {
+    return view('login');
+});
+Route::get('/musrenbang', function () {
+    return view('musrenbang');
 });
 
-Auth::routes();
+//Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
