@@ -11,7 +11,7 @@
         <v-timeline dense>
             <v-timeline-item  color="red" small>
                 <v-row class="">
-                    <v-col class="mt-12 pt-7" cols="2">
+                    <v-col class="mt-10 pt-6" cols="2">
                         <strong>1 January 2019</strong>
                     </v-col>
                     <v-col>

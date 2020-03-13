@@ -1,278 +1,80 @@
 <template>
-    <div>
-        <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
-            <template v-slot:top>
-                <v-toolbar flat color="white">
-                   
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark class="mb-2" v-on="on">Tambahkan Usulan Fisik</v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-title>
-                                <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.protein" label="Protein (g)">
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
-
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-                            </v-card-actions>
+    <v-container>
+        <v-row class="mb-3">
+            <v-col cols="12">
+                <v-hover>
+                    <template v-slot="{ hover }">
+                        <v-card max-height="50" class="prioritas" :elevation="hover ? 17 : 6">
+                            <v-card dark class="d-flex justify-center
+                            align-self-center kelA" color="blue" max-width="150" height="30">
+                                <span class="mt-1">
+                                    Kelurahan Angin
+                                </span>
+                            </v-card>
+                            <v-row style="margin-top:-40px">
+                                <v-col cols="3">
+                                    <v-card-text>Test</v-card-text>
+                                </v-col>
+                                <v-col cols="3">
+                                    <v-card-text>Test</v-card-text>
+                                </v-col>
+                                <v-col cols="3">
+                                    <v-card-text>Test</v-card-text>
+                                </v-col>
+                                <v-col cols="3">
+                                    <v-card-text>Test</v-card-text>
+                                </v-col>
+                            </v-row>
                         </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark class="ml-2 mb-2" v-on="on">Tambahkan Usulan Non-Fisik</v-btn>
+                    </template>
+                </v-hover>
+            </v-col>
+        </v-row>
+        <div style="bottom:0; position:fixed;">
+            <v-row>
+                <v-col cols="12">
+                    <v-hover>
+                        <template v-slot="{ hover }">
+                            <v-card width="400" class="d-flex" :elevation="hover ? 17 : 6">
+                                <v-card-text>
+                                    baris per halaman 5
+                                </v-card-text>
+                                <v-divider vertical></v-divider>
+                                <v-card-text> 1 - 5 dari 10</v-card-text>
+                                <div class="mt-2">
+                                    <v-btn icon>
+                                        <v-icon>keyboard_arrow_left</v-icon>
+                                    </v-btn>
+                                    <v-btn icon>
+                                        <v-icon>keyboard_arrow_right</v-icon>
+                                    </v-btn>
+                                </div>
+                            </v-card>
                         </template>
-                        <v-card>
-                            <v-card-title>
-                                <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.protein" label="Protein (g)">
-                                            </v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
-
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-            </template>
-            <template v-slot:item.action="{ item }">
-                <v-icon small class="mr-2" @click="editItem(item)">
-                    edit
-                </v-icon>
-                <v-icon small @click="deleteItem(item)">
-                    delete
-                </v-icon>
-            </template>
-            <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize">Reset</v-btn>
-            </template>
-        </v-data-table>
-    </div>
+                    </v-hover>
+                </v-col>
+            </v-row>
+        </div>
+    </v-container>
 </template>
+<style scoped>
+    .kelA {
+        left: 10px;
+        top: -18px;
+        position: relative;
+    }
+
+    .prioritas {
+        border-left: 6px solid orange;
+    }
+
+</style>
 
 <script>
     export default {
         data: () => ({
-            dialog: false,
-            headers: [{
-                    text: 'Nama',
-                    align: 'left',
-                    sortable: false,
-                    value: 'name',
-                },
-                {
-                    text: 'Kelompok',
-                    value: 'calories'
-                },
-                {
-                    text: 'Alamat',
-                    value: 'fat'
-                },
-                {
-                    text: 'Verifikasi',
-                    value: 'protein'
-                },
-                {
-                    text: 'Validasi',
-                    value: 'protein'
-                },
-                {
-                    text: 'Prioritas',
-                    value: 'protein'
-                },
-                {
-                    text: 'Actions',
-                    value: 'action',
-                    sortable: false
-                },
-            ],
-            desserts: [],
-            editedIndex: -1,
-            editedItem: {
-                name: '',
-                calories: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0,
-            },
-            defaultItem: {
-                name: '',
-                calories: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0,
-            },
+
         }),
-
-        computed: {
-            formTitle() {
-                return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-            },
-        },
-
-        watch: {
-            dialog(val) {
-                val || this.close()
-            },
-        },
-
-        created() {
-            this.initialize()
-        },
-
-        methods: {
-            initialize() {
-                this.desserts = [{
-                        name:'test',
-                        calories: 159,
-                        fat: 6.0,
-                        carbs: 24,
-                        protein: 4.0,
-                    },
-                    {
-                        name:'test',
-                        calories: 237,
-                        fat: 9.0,
-                        carbs: 37,
-                        protein: 4.3,
-                    },
-                    {
-                        name:'test',
-                        calories: 262,
-                        fat: 16.0,
-                        carbs: 23,
-                        protein: 6.0,
-                    },
-                    {
-                        name:'test',
-                        calories: 305,
-                        fat: 3.7,
-                        carbs: 67,
-                        protein: 4.3,
-                    },
-                    {
-                        name:'test',
-                        calories: 356,
-                        fat: 16.0,
-                        carbs: 49,
-                        protein: 3.9,
-                    },
-                    {
-                        name:'test',
-                        calories: 375,
-                        fat: 0.0,
-                        carbs: 94,
-                        protein: 0.0,
-                    },
-                    {
-                        name:'test',
-                        calories: 392,
-                        fat: 0.2,
-                        carbs: 98,
-                        protein: 0,
-                    },
-                    {
-                        name:'test',
-                        calories: 408,
-                        fat: 3.2,
-                        carbs: 87,
-                        protein: 6.5,
-                    },
-                    {
-                        name:'test',                        calories: 452,
-                        fat: 25.0,
-                        carbs: 51,
-                        protein: 4.9,
-                    },
-                    {
-                        name:'test',
-                        calories: 518,
-                        fat: 26.0,
-                        carbs: 65,
-                        protein: 7,
-                    },
-                ]
-            },
-
-            editItem(item) {
-                this.editedIndex = this.desserts.indexOf(item)
-                this.editedItem = Object.assign({}, item)
-                this.dialog = true
-            },
-
-            deleteItem(item) {
-                const index = this.desserts.indexOf(item)
-                confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
-            },
-
-            close() {
-                this.dialog = false
-                setTimeout(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
-                    this.editedIndex = -1
-                }, 300)
-            },
-
-            save() {
-                if (this.editedIndex > -1) {
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem)
-                } else {
-                    this.desserts.push(this.editedItem)
-                }
-                this.close()
-            },
-        },
     }
 
 </script>

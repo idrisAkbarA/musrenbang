@@ -17,10 +17,21 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login');
 });
-Route::get('/musrenbang', function () {
-    return view('musrenbang');
+Route::get('/musrenbang', 'UsulanController@index');
+Route::get('/init', 'UsulanController@init');
+Route::get('/musrenbang-test', function () {
+    return view('musrenbang-test');
 });
+Route::post('/submitFoto','ImageController@store');
+Route::post('/usul','UsulanController@store');
+Route::get('/usulFilter','UsulanController@dataUsulanFilter');
+Route::get('/usul','UsulanController@dataUsulan');
 
+Route::post('/verif','UsulanController@verifikasi');
+Route::post('/valid','UsulanController@validasi');
+Route::post('/prioritas','UsulanController@prioritas');
+
+Route::get('/itemPilihan','UsulanController@itemPilihan');
 //Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
