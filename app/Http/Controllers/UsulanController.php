@@ -114,8 +114,8 @@ class UsulanController extends Controller
             $usul->prioritas = "tidak";
             $usul->foto1 = $request['foto1'];
             $usul->foto2 = $request['foto2'];
-            $usul->foto3 = "--";
-            $usul->foto4 = "--";
+            $usul->file1 = $request['file1'];
+            $usul->file2 = $request['file2'];
             $usul->loading_verif = false;
             $usul->loading_valid = false;
             $usul->loading_prioritas = false;

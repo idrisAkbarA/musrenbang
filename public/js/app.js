@@ -92141,7 +92141,7 @@ var app = new Vue({
       snackbar: false,
       snackbarText: '',
       snackbarColor: '',
-      editOverlay: true,
+      editOverlay: false,
       overlay: false,
       loadingText: "Memuat...",
       result: '',
@@ -92149,6 +92149,7 @@ var app = new Vue({
       tableUsulan: [],
       id: '',
       listFoto: [],
+      listFile: [],
       dropzoneOptions: {
         autoProcessQueue: false,
         acceptedFiles: 'image/*',
@@ -92159,9 +92160,24 @@ var app = new Vue({
         clickable: true,
         addRemoveLinks: true,
         renameFile: function renameFile(file) {
-          var newName = new Date().getTime() + '-' + file.name; //this.listFoto.push(newName);
-
-          console.log(this.listFoto);
+          var newName = new Date().getTime() + '-' + file.name;
+          return newName;
+        },
+        headers: {
+          "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content
+        }
+      },
+      dropzoneOptionsFiles: {
+        autoProcessQueue: false,
+        acceptedFiles: '	application/msexcel,application/pdf,application/msword',
+        url: '/submitFiles',
+        thumbnailWidth: 200,
+        maxFilesize: 8,
+        maxFiles: 2,
+        clickable: true,
+        addRemoveLinks: true,
+        renameFile: function renameFile(file) {
+          var newName = new Date().getTime() + '-' + file.name;
           return newName;
         },
         headers: {
@@ -92169,6 +92185,7 @@ var app = new Vue({
         }
       },
       barisPerHalaman: null,
+      dialogFoto: false,
       dialogFisik: false,
       dialogNonFisik: false,
       drawer: true,
@@ -92486,15 +92503,23 @@ var app = new Vue({
       this.$refs.myVueDropzone.processQueue();
     },
     photosUploaded: function photosUploaded() {
+      this.loadingText = "Mengunggah File..";
+      this.$refs.myVueDropzoneFiles.processQueue();
+    },
+    filesUploaded: function filesUploaded() {
       var _this = this;
 
-      this.loadingText = "Menyimpan rincian usulan..";
+      this.loadingText = "Mengunggah rincian usulan..";
       setTimeout(function () {
         _this.sendUsulanDetail();
       }, 1000);
     },
     afterComplete: function afterComplete(file) {
       this.listFoto.push(file.upload.filename);
+      console.log(this.listFoto);
+    },
+    afterCompleteFiles: function afterCompleteFiles(file) {
+      this.listFile.push(file.upload.filename);
       console.log(this.listFoto);
     },
     sendUsulanDetail: function sendUsulanDetail() {
@@ -92511,6 +92536,8 @@ var app = new Vue({
         output: ini.output,
         foto1: ini.listFoto[0],
         foto2: ini.listFoto[1],
+        file1: ini.listFile[0],
+        file2: ini.listFile[1],
         rt: ini.rt,
         rw: ini.rw,
         nama_pengusul: ini.nama_pengusul,

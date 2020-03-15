@@ -60,8 +60,8 @@ class initUsulan extends Command
             $usulan->rw = rand(1,5);
             $usulan->foto1 = "-";
             $usulan->foto2 = "-";
-            $usulan->foto3 = "-";
-            $usulan->foto4 = "-";
+            $usulan->file1 = "-";
+            $usulan->file2 = "-";
             $usulan->nama_pengusul = $faker->name;
             $usulan->hp_pengusul = $faker->phoneNumber;
             $usulan->alamat_pengusul = $faker->address;

@@ -45,14 +45,17 @@ const app = new Vue({
         snackbar:false,
         snackbarText:'',
         snackbarColor:'',
-        editOverlay:true,
+
+        editOverlay:false,
         overlay:false,
+
         loadingText:"Memuat...",
         result:'',
         rawData:[],
         tableUsulan:[],
         id:'',
         listFoto:[],
+        listFile:[],
         dropzoneOptions: {
             autoProcessQueue:false,
             acceptedFiles:'image/*',
@@ -64,13 +67,27 @@ const app = new Vue({
             addRemoveLinks: true,
             renameFile:function(file) {
                 let newName = new Date().getTime() + '-' + file.name;
-                //this.listFoto.push(newName);
-                console.log(this.listFoto);
+                return newName;
+            },
+            headers: {  "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content }
+        },
+        dropzoneOptionsFiles: {
+            autoProcessQueue:false,
+            acceptedFiles:'	application/msexcel,application/pdf,application/msword',
+            url: '/submitFiles',
+            thumbnailWidth: 200,
+            maxFilesize: 8,
+            maxFiles:2,
+            clickable:true,
+            addRemoveLinks: true,
+            renameFile:function(file) {
+                let newName = new Date().getTime() + '-' + file.name;
                 return newName;
             },
             headers: {  "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content }
         },
         barisPerHalaman: null,
+        dialogFoto:false,
         dialogFisik:false,
         dialogNonFisik:false,
         drawer: true,
@@ -391,14 +408,21 @@ const app = new Vue({
             this.$refs.myVueDropzone.processQueue();
         },
         photosUploaded(){
-            this.loadingText = "Menyimpan rincian usulan..";
+            this.loadingText = "Mengunggah File..";
+            this.$refs.myVueDropzoneFiles.processQueue();
+        },
+        filesUploaded(){
+            this.loadingText = "Mengunggah rincian usulan..";
             setTimeout(() => {
                 this.sendUsulanDetail();
               }, 1000)
-            
         },
         afterComplete(file){
             this.listFoto.push(file.upload.filename);
+            console.log(this.listFoto);
+        },
+        afterCompleteFiles(file){
+            this.listFile.push(file.upload.filename);
             console.log(this.listFoto);
         },
         sendUsulanDetail(){
@@ -415,6 +439,8 @@ const app = new Vue({
                 output: ini.output,
                 foto1: ini.listFoto[0],
                 foto2: ini.listFoto[1],
+                file1: ini.listFile[0],
+                file2: ini.listFile[1],
                 rt: ini.rt,
                 rw: ini.rw,
                 nama_pengusul: ini.nama_pengusul,

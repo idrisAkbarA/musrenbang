@@ -28,8 +28,8 @@ class CreateUsulansTable extends Migration
             $table->string('rw');
             $table->string('foto1');
             $table->string('foto2');
-            $table->string('foto3');
-            $table->string('foto4');
+            $table->string('file1');
+            $table->string('file2');
             $table->string('nama_pengusul');
             $table->string('hp_pengusul');
             $table->string('alamat_pengusul');

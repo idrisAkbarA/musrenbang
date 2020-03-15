@@ -23,6 +23,7 @@ Route::get('/musrenbang-test', function () {
     return view('musrenbang-test');
 });
 Route::post('/submitFoto','ImageController@store');
+Route::post('/submitFiles','FilesController@store');
 Route::post('/usul','UsulanController@store');
 Route::get('/usulFilter','UsulanController@dataUsulanFilter');
 Route::get('/usul','UsulanController@dataUsulan');
