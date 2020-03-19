@@ -21,6 +21,18 @@ class UsulanController extends Controller
         $userInfo = ['id'=>1,"kelurahan"=>"Air Hitam"]; //nanti ganti dengan session
         return $userInfo;
     }
+    public function hapus(Request $request)
+    {   
+        try {
+            //code...
+            $id = $request['id'];
+            $usulan = Usulan::find($id);
+            $usulan->delete();
+            return 'true';
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
     public function itemPilihan()
     {
         $itemUsulan = ItemUsulan::all(); //nanti ganti dengan session
@@ -30,13 +42,13 @@ class UsulanController extends Controller
     }
     public function dataUsulan()
     {
-        $data = Usulan::paginate(5); //nanti ganti dengan session
+        $data = Usulan::paginate(5)->orderBy('created_at', 'desc'); //nanti ganti dengan session
         return $data;
     }
     public function dataUsulanFilter(Request $request)
     {
         $itemPerPage = $request['itemPerPage'];
-        $data = Usulan::paginate($itemPerPage); //nanti ganti dengan session
+        $data = Usulan::orderBy('id', 'desc')->paginate($itemPerPage); //nanti ganti dengan session
         return $data;
     }
     public function index()
@@ -120,7 +132,43 @@ class UsulanController extends Controller
             $usul->loading_valid = false;
             $usul->loading_prioritas = false;
             $usul->save();
-            return Usulan::all();
+            return Usulan::orderBy('id', 'desc')->paginate($request['itemPerPage']);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+       
+    }
+   
+    public function update(Request $request)
+    {   
+        try {
+            //code...
+            $usul =  usulan::find($request['id']);
+            $usul->usulan = $request['usulan'];
+            $usul->pod = $request['pod'];
+            $usul->kelurahan = $request['kelurahan'];
+            $usul->volume = $request['volume'];
+            $usul->satuan = $request['satuan'];
+            $usul->alamat = $request['alamat'];
+            $usul->alasan_usulan = $request['alasan_usulan'];
+            $usul->output = $request['output'];
+            $usul->rt = $request['rt'];
+            $usul->rw = $request['rw'];
+            $usul->alamat_pengusul = $request['alamat_pengusul'];
+            $usul->hp_pengusul = $request['hp_pengusul'];
+            $usul->nama_pengusul = $request['nama_pengusul'];
+            // $usul->verifikasi = "tidak";
+            // $usul->validasi = "tidak";
+            // $usul->prioritas = "tidak";
+            // $usul->foto1 = $request['foto1'];
+            // $usul->foto2 = $request['foto2'];
+            // $usul->file1 = $request['file1'];
+            // $usul->file2 = $request['file2'];
+            // $usul->loading_verif = false;
+            // $usul->loading_valid = false;
+            // $usul->loading_prioritas = false;
+            $usul->save();
+            return Usulan::orderBy('id', 'desc')->paginate($request['itemPerPage']);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -156,10 +204,6 @@ class UsulanController extends Controller
      * @param  \App\Usulan  $usulan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Usulan $usulan)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

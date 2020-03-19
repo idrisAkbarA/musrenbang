@@ -92014,6 +92014,115 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_vue__;
 
 /***/ }),
 
+/***/ "./node_modules/vuetify/es5/services/goto/easing-patterns.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vuetify/es5/services/goto/easing-patterns.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.easeInOutQuint = exports.easeOutQuint = exports.easeInQuint = exports.easeInOutQuart = exports.easeOutQuart = exports.easeInQuart = exports.easeInOutCubic = exports.easeOutCubic = exports.easeInCubic = exports.easeInOutQuad = exports.easeOutQuad = exports.easeInQuad = exports.linear = void 0;
+
+// linear
+var linear = function linear(t) {
+  return t;
+}; // accelerating from zero velocity
+
+
+exports.linear = linear;
+
+var easeInQuad = function easeInQuad(t) {
+  return Math.pow(t, 2);
+}; // decelerating to zero velocity
+
+
+exports.easeInQuad = easeInQuad;
+
+var easeOutQuad = function easeOutQuad(t) {
+  return t * (2 - t);
+}; // acceleration until halfway, then deceleration
+
+
+exports.easeOutQuad = easeOutQuad;
+
+var easeInOutQuad = function easeInOutQuad(t) {
+  return t < 0.5 ? 2 * Math.pow(t, 2) : -1 + (4 - 2 * t) * t;
+}; // accelerating from zero velocity
+
+
+exports.easeInOutQuad = easeInOutQuad;
+
+var easeInCubic = function easeInCubic(t) {
+  return Math.pow(t, 3);
+}; // decelerating to zero velocity
+
+
+exports.easeInCubic = easeInCubic;
+
+var easeOutCubic = function easeOutCubic(t) {
+  return Math.pow(--t, 3) + 1;
+}; // acceleration until halfway, then deceleration
+
+
+exports.easeOutCubic = easeOutCubic;
+
+var easeInOutCubic = function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * Math.pow(t, 3) : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+}; // accelerating from zero velocity
+
+
+exports.easeInOutCubic = easeInOutCubic;
+
+var easeInQuart = function easeInQuart(t) {
+  return Math.pow(t, 4);
+}; // decelerating to zero velocity
+
+
+exports.easeInQuart = easeInQuart;
+
+var easeOutQuart = function easeOutQuart(t) {
+  return 1 - Math.pow(--t, 4);
+}; // acceleration until halfway, then deceleration
+
+
+exports.easeOutQuart = easeOutQuart;
+
+var easeInOutQuart = function easeInOutQuart(t) {
+  return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t;
+}; // accelerating from zero velocity
+
+
+exports.easeInOutQuart = easeInOutQuart;
+
+var easeInQuint = function easeInQuint(t) {
+  return Math.pow(t, 5);
+}; // decelerating to zero velocity
+
+
+exports.easeInQuint = easeInQuint;
+
+var easeOutQuint = function easeOutQuint(t) {
+  return 1 + Math.pow(--t, 5);
+}; // acceleration until halfway, then deceleration
+
+
+exports.easeOutQuint = easeOutQuint;
+
+var easeInOutQuint = function easeInOutQuint(t) {
+  return t < 0.5 ? 16 * Math.pow(t, 5) : 1 + 16 * Math.pow(--t, 5);
+};
+
+exports.easeInOutQuint = easeInOutQuint;
+//# sourceMappingURL=easing-patterns.js.map
+
+/***/ }),
+
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -92087,14 +92196,16 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
-/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vue2_dropzone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue2-dropzone */ "./node_modules/vue2-dropzone/dist/vue2Dropzone.js");
-/* harmony import */ var vue2_dropzone__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue2_dropzone__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var vue2_dropzone_dist_vue2Dropzone_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue2-dropzone/dist/vue2Dropzone.min.css */ "./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css");
-/* harmony import */ var vue2_dropzone_dist_vue2Dropzone_min_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue2_dropzone_dist_vue2Dropzone_min_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vuetify_es5_services_goto_easing_patterns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuetify/es5/services/goto/easing-patterns */ "./node_modules/vuetify/es5/services/goto/easing-patterns.js");
+/* harmony import */ var vuetify_es5_services_goto_easing_patterns__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuetify_es5_services_goto_easing_patterns__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
+/* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue2_dropzone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue2-dropzone */ "./node_modules/vue2-dropzone/dist/vue2Dropzone.js");
+/* harmony import */ var vue2_dropzone__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue2_dropzone__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vue2_dropzone_dist_vue2Dropzone_min_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue2-dropzone/dist/vue2Dropzone.min.css */ "./node_modules/vue2-dropzone/dist/vue2Dropzone.min.css");
+/* harmony import */ var vue2_dropzone_dist_vue2Dropzone_min_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue2_dropzone_dist_vue2Dropzone_min_css__WEBPACK_IMPORTED_MODULE_4__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -92107,7 +92218,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 
-Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_0___default.a);
+
+Vue.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -92129,15 +92241,18 @@ Vue.component('musrenbang', __webpack_require__(/*! ./components/musrenbang.vue 
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-var vuetify = new vuetify__WEBPACK_IMPORTED_MODULE_0___default.a();
+var vuetify = new vuetify__WEBPACK_IMPORTED_MODULE_1___default.a();
 var app = new Vue({
   el: '#app',
   vuetify: vuetify,
   components: {
-    vueDropzone: vue2_dropzone__WEBPACK_IMPORTED_MODULE_2___default.a
+    vueDropzone: vue2_dropzone__WEBPACK_IMPORTED_MODULE_3___default.a
   },
   data: function data() {
     return {
+      filter: [],
+      checkProgress: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      progressValue: 0,
       snackbar: false,
       snackbarText: '',
       snackbarColor: '',
@@ -92147,6 +92262,7 @@ var app = new Vue({
       result: '',
       rawData: [],
       tableUsulan: [],
+      tableUsulanTemp: [],
       id: '',
       listFoto: [],
       listFile: [],
@@ -92185,6 +92301,7 @@ var app = new Vue({
         }
       },
       barisPerHalaman: null,
+      dialogDelete: false,
       dialogFoto: false,
       dialogFisik: false,
       dialogNonFisik: false,
@@ -92217,7 +92334,14 @@ var app = new Vue({
       kelurahan: '',
       pod_items: [],
       usulan_items: [],
-      kelurahan_items: []
+      kelurahan_items: [],
+      jumlahFoto: 0,
+      jumlahFile: 0,
+      easing: 'easeInOutCubic',
+      easings: Object.keys(vuetify_es5_services_goto_easing_patterns__WEBPACK_IMPORTED_MODULE_0__),
+      deleteId: -1,
+      deleteIdTable: -1,
+      carousselList: []
     };
   },
   beforeMount: function beforeMount() {
@@ -92231,10 +92355,177 @@ var app = new Vue({
       that.fad = !that.fad;
     });
   },
+  watch: {
+    pod: function pod(val) {
+      this.calcProgressValue(val, 0);
+    },
+    usulan: function usulan(val) {
+      this.calcProgressValue(val, 1);
+    },
+    volume: function volume(val) {
+      this.calcProgressValue(val, 2);
+    },
+    satuan: function satuan(val) {
+      this.calcProgressValue(val, 3);
+    },
+    output: function output(val) {
+      this.calcProgressValue(val, 4);
+    },
+    jumlahFoto: function jumlahFoto(val) {
+      if (this.jumlahFoto > 1 || this.jumlahFoto < 1) {
+        this.calcProgressValue(val, 5);
+      }
+    },
+    jumlahFile: function jumlahFile(val) {
+      if (this.jumlahFile > 1 || this.jumlahFile < 1) {
+        this.calcProgressValue(val, 6);
+      }
+    },
+    alasan_usulan: function alasan_usulan(val) {
+      this.calcProgressValue(val, 7);
+    },
+    alamat: function alamat(val) {
+      this.calcProgressValue(val, 8);
+    },
+    rt: function rt(val) {
+      this.calcProgressValue(val, 9);
+    },
+    rw: function rw(val) {
+      this.calcProgressValue(val, 10);
+    },
+    kelurahan: function kelurahan(val) {
+      this.calcProgressValue(val, 11);
+    },
+    nama_pengusul: function nama_pengusul(val) {
+      this.calcProgressValue(val, 12);
+    },
+    hp_pengusul: function hp_pengusul(val) {
+      this.calcProgressValue(val, 13);
+    },
+    alamat_pengusul: function alamat_pengusul(val) {
+      this.calcProgressValue(val, 14);
+    }
+  },
   methods: {
+    tahunItems: function tahunItems() {
+      var awalTahun = 2020;
+      var date = new Date();
+      var currentTahun = Number(date.getFullYear());
+      var tahunList = [];
+
+      for (var index = awalTahun; index <= currentTahun; index++) {
+        tahunList.push(index);
+      }
+
+      console.log(tahunList);
+      return tahunList;
+    },
+    update: function update() {
+      console.log("woi");
+      var ini = this;
+      axios.post('/usul/update', {
+        id: ini.tableUsulanTemp.id,
+        usulan: ini.tableUsulanTemp.usulan,
+        kelurahan: ini.tableUsulanTemp.kelurahan,
+        pod: ini.tableUsulanTemp.pod,
+        volume: ini.tableUsulanTemp.volume,
+        satuan: ini.tableUsulanTemp.satuan,
+        alamat: ini.tableUsulanTemp.alamat,
+        alasan_usulan: ini.tableUsulanTemp.alasan_usulan,
+        informasi_tambahan: ini.tableUsulanTemp.informasi_tambahan,
+        output: ini.tableUsulanTemp.output,
+        rt: ini.tableUsulanTemp.rt,
+        rw: ini.tableUsulanTemp.rw,
+        nama_pengusul: ini.tableUsulanTemp.nama_pengusul,
+        hp_pengusul: ini.tableUsulanTemp.hp_pengusul,
+        alamat_pengusul: ini.tableUsulanTemp.alamat_pengusul,
+        itemPerPage: ini.rawData.per_page
+      }).then(function (response) {
+        ini.editOverlay = false;
+        ini.tableUsulan = response.data.data;
+        ini.overlay = false;
+        ini.snackbarText = "Usulan berhasil diperbarui!";
+        ini.snackbarColor = "success";
+        ini.snackbar = true;
+        console.log(response.data.data);
+      })["catch"](function (error) {
+        console.log(error);
+        ini.editOverlay = false;
+        ini.snackbarText = "Terjadi kesalahan coba lagi!";
+        ini.snackbarColor = "error";
+        ini.snackbar = true;
+      });
+      this.dialogFisik = false;
+    },
+    caroussel: function caroussel(index) {
+      this.carousselList = [];
+
+      if (index == 0) {
+        this.carousselList.push(this.foto1());
+        this.carousselList.push(this.foto2());
+      } else {
+        this.carousselList.push(this.foto2());
+        this.carousselList.push(this.foto1());
+      }
+
+      console.log(index);
+      this.dialogFoto = true;
+    },
+    downloadFilePendukung: function downloadFilePendukung(id) {
+      if (id == 1) {
+        window.open('/files/' + this.tableUsulanTemp.file1);
+      } else {
+        window.open('/files/' + this.tableUsulanTemp.file2);
+      }
+    },
+    deleteUsulanConfirmed: function deleteUsulanConfirmed() {
+      var ini = this;
+      ini.snackbar = false;
+      this.loading = true;
+      this.dialogDelete = false;
+      axios.post('/usul/hapus', {
+        id: ini.deleteId
+      }).then(function (response) {
+        ini.loading = false;
+        ini.snackbarText = "Usulan berhasil dihapus!";
+        ini.snackbarColor = "success";
+        ini.snackbar = true;
+        ini.tableUsulan.splice(ini.deleteIdTable, 1);
+      })["catch"](function (error) {
+        this.loading = false;
+        ini.snackbarText = "Terjadi kesalahan, coba lagi";
+        ini.snackbarColor = "error";
+        ini.snackbar = true;
+      });
+    },
+    deleteUsulan: function deleteUsulan(index) {
+      this.dialogDelete = true;
+      var ini = this;
+      ini.deleteIdTable = index;
+      ini.deleteId = ini.tableUsulan[index]['id'];
+    },
+    calcProgressValue: function calcProgressValue(value, index) {
+      if (value == null || value == "") {
+        if (this.checkProgress[index] == 0) {
+          this.checkProgress[index] = 0;
+        } else {
+          this.checkProgress[index] = 0;
+          this.progressValue = this.progressValue - 6.66666666667;
+        }
+      } else {
+        if (this.checkProgress[index] == 0) {
+          this.checkProgress[index] = 1;
+          this.progressValue = this.progressValue + 6.66666666667;
+        } else {
+          this.checkProgress[index] = 1;
+        }
+      }
+
+      console.log(this.progressValue, this.checkProgress);
+    },
     loadTableWithFilter: function loadTableWithFilter(itemPerPage) {
       var ini = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: '/usulFilter',
         params: {
@@ -92285,7 +92576,7 @@ var app = new Vue({
     nextPage: function nextPage() {
       var ini = this; //console.log(ini.rawData.next_page_url+"$itemPerPage="+ini.barisPerHalaman);
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: ini.rawData.next_page_url + "&itemPerPage=" + ini.barisPerHalaman
       }).then(function (response) {
@@ -92303,7 +92594,7 @@ var app = new Vue({
     },
     previousPage: function previousPage() {
       var ini = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: ini.rawData.prev_page_url + "&itemPerPage=" + ini.barisPerHalaman
       }).then(function (response) {
@@ -92321,7 +92612,7 @@ var app = new Vue({
     },
     loadDataTable: function loadDataTable() {
       var ini = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: '/usul'
       }).then(function (response) {
@@ -92339,7 +92630,7 @@ var app = new Vue({
     },
     loadInitData: function loadInitData() {
       var ini = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: '/itemPilihan'
       }).then(function (response) {
@@ -92498,9 +92789,32 @@ var app = new Vue({
       });
     },
     send: function send() {
-      this.loadingText = "Mengunggah Foto..";
-      this.overlay = true;
-      this.$refs.myVueDropzone.processQueue();
+      var option = {
+        duration: 300,
+        offset: 10,
+        container: "#scrolling-techniques-7"
+      };
+      var isEmpty = this.isFieldEmpty();
+
+      if (isEmpty != -1) {
+        this.$vuetify.goTo(isEmpty, option);
+      } else {
+        this.loadingText = "Mengunggah Foto..";
+        this.overlay = true;
+        this.$refs.myVueDropzone.processQueue();
+      }
+    },
+    isFieldEmpty: function isFieldEmpty() {
+      var target = -1;
+
+      for (var i = 0; i < this.checkProgress.length; i++) {
+        if (this.checkProgress[i] == 0) {
+          target = "#s" + (i + 1);
+          break;
+        }
+      }
+
+      return target;
     },
     photosUploaded: function photosUploaded() {
       this.loadingText = "Mengunggah File..";
@@ -92523,6 +92837,7 @@ var app = new Vue({
       console.log(this.listFoto);
     },
     sendUsulanDetail: function sendUsulanDetail() {
+      console.log("woi");
       var ini = this;
       axios.post('/usul', {
         usulan: ini.usulan,
@@ -92542,32 +92857,72 @@ var app = new Vue({
         rw: ini.rw,
         nama_pengusul: ini.nama_pengusul,
         hp_pengusul: ini.hp_pengusul,
-        alamat_pengusul: ini.alamat_pengusul
+        alamat_pengusul: ini.alamat_pengusul,
+        itemPerPage: ini.rawData.per_page
       }).then(function (response) {
-        ini.tableUsulan = response.data;
+        ini.tableUsulan = response.data.data;
         ini.overlay = false;
         ini.snackbarText = "Usulan berhasil disimpan!";
         ini.snackbarColor = "success";
         ini.snackbar = true;
-        console.log(response);
+        console.log(response.data.data);
       })["catch"](function (error) {
         console.log(error);
+        ini.snackbarText = "Terjadi kesalahan coba lagi!";
+        ini.snackbarColor = "error";
+        ini.snackbar = true;
       });
       this.dialogFisik = false;
     },
+    edit: function edit(index) {
+      this.tableUsulanTemp = this.tableUsulan[index];
+      this.editOverlay = true;
+      console.log(index, this.tableUsulanTemp);
+    },
+    foto1: function foto1() {
+      var a = 'images/' + this.tableUsulanTemp.foto1;
+      return a.replace(" ", '%20');
+    },
+    foto2: function foto2() {
+      var a = 'images/' + this.tableUsulanTemp.foto2;
+      return a.replace(" ", '%20');
+    },
+    fotoAdded: function fotoAdded(file) {
+      this.jumlahFoto += 1;
+      console.log(this.jumlahFoto);
+    },
     fileAdded: function fileAdded(file) {
-      console.log(file.upload.filename);
+      this.jumlahFile += 1;
+      console.log(this.jumlahFile);
     },
     batal: function batal() {
       this.dialogFisik = false;
       this.overlay = false;
+      this.usulan = "";
+      this.kelurahan = "";
+      this.pod = "";
+      this.volume = "";
+      this.satuan = "";
+      this.alamat = "";
+      this.alasan_usulan = "";
+      this.informasi_tambahan = "";
+      this.output = "";
+      this.listFoto = [];
+      this.listFile = [];
+      this.jumlahFile = 0;
+      this.jumlahFoto = 0;
+      this.rt = "";
+      this.rw = "";
+      this.nama_pengusul = "";
+      this.hp_pengusul = "";
+      this.alamat_pengusul = "";
     },
     initUsulFisik: function initUsulFisik() {
       var _this2 = this;
 
       //get user info ketika ingin mengajukan usulan
       var ini = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/init').then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/init').then(function (response) {
         ini.id = response.data['id'];
         ini.kelurahan = response.data['kelurahan'];
         console.log(ini.id, ini.kelurahan);

@@ -131,7 +131,7 @@
             display: grid;
             grid-gap: 1.5em;
             grid-template-columns: 55% 22.5% 22.5%;
-            grid-template-rows: 1fr 1fr 1fr;
+            grid-template-rows: 33.33% 33.33% 33.33%;
             grid-template-areas:
                 "rincian gambar1 gambar2"
                 "rincian lokasi lokasi"
@@ -158,12 +158,11 @@
         <v-app id="inspire">
             <v-dialog max-width="700px" style="z-index:1004" v-model="dialogFoto" >
                 <v-carousel>
-                    <v-carousel-item
-                      
-                      src="https://picsum.photos/510/300?random"
+                    <v-carousel-item v-for="n in 2"  :key="n"
+                      :src="carousselList[n-1]"
                       reverse-transition="fade-transition"
                       transition="fade-transition"
-                    ></v-carousel-item>
+                ></v-carousel-item>
                   </v-carousel>
 
             </v-dialog>
@@ -172,7 +171,7 @@
                     <div v-if="editOverlay" style="width:100vw; height:100vh;" class="editGrid">
                         <div style="position: fixed; top:2em; right:2em">
                             <v-btn text @click="editOverlay = false">batal</v-btn>
-                            <v-btn color="primary" @click="editOverlay = false">Simpan</v-btn>
+                            <v-btn color="primary" @click="update()">Simpan</v-btn>
                         </div>
                         <v-hover>
                             <template v-slot="{ hover }">
@@ -189,49 +188,49 @@
                                         <v-row no-gutters>
 
                                             <v-col cols="12" sm="6" md="12">
-                                                <v-combobox dense prepend-inner-icon="account_balance" v-model="pod"
+                                                <v-combobox dense prepend-inner-icon="account_balance" v-model="tableUsulanTemp.pod"
                                                     outlined :items="pod_items" label="Organisasi Perangkat Daerah">
                                                 </v-combobox>
                                             </v-col>
 
                                             <v-col cols="12">
                                                 <v-combobox dense prepend-inner-icon="announcement" outlined
-                                                    v-model="usulan" :items="usulan_items" label="Usulan"></v-combobox>
+                                                    v-model="tableUsulanTemp.usulan" :items="usulan_items" label="Usulan"></v-combobox>
                                             </v-col>
                                             <v-col cols="6">
 
-                                                <v-text-field dense Label="Volume" class="mr-1" v-model="volume"
+                                                <v-text-field dense Label="Volume" class="mr-1" v-model="tableUsulanTemp.volume"
                                                     prepend-inner-icon="mdi-scale-balance" outlined></v-text-field>
                                             </v-col>
                                             <v-col cols="6">
-                                                <v-text-field dense Label="Satuan" class="ml-1" v-model="satuan"
+                                                <v-text-field dense Label="Satuan" class="ml-1" v-model="tableUsulanTemp.satuan"
                                                     prepend-inner-icon="linear_scale" outlined></v-text-field>
                                             </v-col>
                                             <v-col cols="12">
                                                 <v-textarea dense
                                                     prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
-                                                    v-model="output" outlined auto-grow label="Output" rows="3"
+                                                    v-model="tableUsulanTemp.output" outlined auto-grow label="Output" rows="3"
                                                     row-height="30">
                                                 </v-textarea>
                                             </v-col>
                                             <v-col cols="12">
                                                 <v-textarea dense
                                                     prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
-                                                    v-model="alasan_usulan" outlined auto-grow label="Alasan diusulkan"
+                                                    v-model="tableUsulanTemp.alasan_usulan" outlined auto-grow label="Alasan diusulkan"
                                                     rows="3" row-height="30"></v-textarea>
                                             </v-col>
                                             <v-col cols="12">
                                                 <v-textarea dense
                                                     prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
-                                                    v-model="informasi_tambahan" outlined auto-grow
+                                                    v-model="tableUsulanTemp.informasi_tambahan" outlined auto-grow
                                                     label="Informasi Tambahan" rows="3" row-height="30"></v-textarea>
                                             </v-col>
 
                                             <v-col cols="12">
-                                                <v-btn class="ma-2" tile outlined color="success">
+                                                <v-btn @click="downloadFilePendukung(1)" class="ma-2" tile outlined color="success">
                                                     <v-icon left>cloud_download</v-icon> File Pendukung 1
                                                   </v-btn>
-                                                <v-btn class="ma-2" tile outlined color="success">
+                                                <v-btn @click="downloadFilePendukung(2)"class="ma-2" tile outlined color="success">
                                                     <v-icon left>cloud_download</v-icon> File Pendukung 2
                                                   </v-btn>
                                             </v-col>
@@ -248,17 +247,17 @@
                         </v-hover>
                         <v-hover>
                             <template v-slot="{ hover }">
-                                <v-card @click="dialogFoto = true" width="100%" ripple light :elevation="hover ? 20 : 6"
+                                <v-card @click="caroussel(0)" width="100%" ripple light :elevation="hover ? 20 : 6"
                                     style="grid-area: gambar1">
-                                    <v-img aspect-ratio src="https://picsum.photos/510/300?random"></v-img>
+                                    <v-img aspect-ratio :src="foto1()"></v-img>
                                 </v-card>
                             </template>
                         </v-hover>
                         <v-hover>
                             <template v-slot="{ hover }">
-                                <v-card @click="dialogFoto = true" width="100%" ripple light :elevation="hover ? 20 : 6"
+                                <v-card  @click="caroussel(1)" width="100%" ripple light :elevation="hover ? 20 : 6"
                                     style="grid-area: gambar2">
-                                    <v-img src="https://picsum.photos/510/300?random"></v-img>
+                                    <v-img :src="foto2()"></v-img>
                                 </v-card>
                             </template>
                         </v-hover>
@@ -272,18 +271,18 @@
                                     <v-container>
                                         <v-row no-gutters>
                                             <v-col cols="12">
-                                                <v-text-field dense Label="Jalan/alamat" v-model="alamat"
+                                                <v-text-field dense Label="Jalan/alamat" v-model="tableUsulanTemp.alamat"
                                                     prepend-inner-icon="place" outlined></v-text-field>
                                             </v-col>
                                             <v-col cols="3">
-                                                <v-text-field dense class="mr-1" Label="RT" v-model="rt" outlined>
+                                                <v-text-field dense class="mr-1" Label="RT" v-model="tableUsulanTemp.rt" outlined>
                                                 </v-text-field>
                                             </v-col>
                                             <v-col cols="3">
-                                                <v-text-field dense Label="RW" v-model="rw" outlined></v-text-field>
+                                                <v-text-field dense Label="RW" v-model="tableUsulanTemp.rw" outlined></v-text-field>
                                             </v-col>
                                             <v-col cols="6">
-                                                <v-autocomplete dense class="ml-1" v-model="kelurahan"
+                                                <v-autocomplete dense class="ml-1" v-model="tableUsulanTemp.kelurahan"
                                                     prepend-inner-icon="map" outlined :items="kelurahan_items"
                                                     label="Kelurahan">
                                                 </v-autocomplete>
@@ -305,25 +304,23 @@
                                         <v-row no-gutters>
                                             <v-col cols="12" sm="6" md="6">
                                                 <v-text-field dense class="mr-1" Label="Nama Pengusul"
-                                                    v-model="nama_pengusul" prepend-inner-icon="person" outlined>
+                                                    v-model="tableUsulanTemp.nama_pengusul" prepend-inner-icon="person" outlined>
                                                 </v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
                                                 <v-text-field dense class="ml-1" Label="No. HP Pengusul"
-                                                    v-model="hp_pengusul" prepend-inner-icon="phone" outlined>
+                                                    v-model="tableUsulanTemp.hp_pengusul" prepend-inner-icon="phone" outlined>
                                                 </v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="12">
-                                                <v-text-field dense Label="Alamat Pengusul" v-model="alamat_pengusul"
+                                                <v-text-field dense Label="Alamat Pengusul" v-model="tableUsulanTemp.alamat_pengusul"
                                                     prepend-inner-icon="place" outlined></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>
-
                                 </v-card>
                             </template>
                         </v-hover>
-
                     </div>
                 </v-slide-y-reverse-transition>
             </v-overlay>
@@ -414,11 +411,82 @@
                     @yield('jurusan')
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn small class="mr-2 ml-2" @click.stop="initUsulFisik()" color="primary" v-if="!fad">Tambah Usulan
-                    Fisik</v-btn>
-                <v-btn small color="primary" @click.stop="dialogNonFisik = true" v-if="!fad">Tambah Usulan Non Fisik
-                </v-btn>
-                <v-btn icon color="grey darken-1">
+                <div class="text-center" style="z-index:100">
+                    <v-menu
+                      :close-on-content-click="false"
+                      offset-y
+                      :nudge-right="200"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                        class="ml-2 mr-2"
+                        small
+                            icon
+                          color="indigo"
+                          dark
+                          v-on="on"
+                        >
+                          <v-icon>
+                              search
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                
+                      <v-card width="100vw">
+                        <v-container>
+                            <v-row class="ml-2 mr-2" dense>
+                                <v-col cols="12">
+                                    <div class="title">
+                                        Pencarian/Filter
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="2">
+                                    <v-autocomplete dense v-model="tahun" prepend-inner-icon="event" outlined
+                                        :items="tahunItems()" label="Tahun">
+                                    </v-autocomplete>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-combobox dense prepend-inner-icon="announcement" outlined v-model="usulan"
+                                    :items="usulan_items" label="Usulan"></v-combobox>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-combobox dense prepend-inner-icon="account_balance" v-model="pod" outlined
+                                            :items="pod_items" label="Organisasi Perangkat Daerah"></v-combobox>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                      </v-card>
+                    </v-menu>
+                  </div>
+                <div style="z-index:100" class="text-center">
+                    <v-menu open-on-hover offset-y>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                           small
+                          color="primary"
+                          dark
+                          v-on="on"
+                        >
+                        <v-icon left>
+                            add
+                        </v-icon>
+                          Tambah Usulan
+                        </v-btn>
+                      </template>
+                
+                      <v-list >
+                        <v-list-item style="z-index:9999" @click.stop="initUsulFisik()"
+                        >
+                          <v-list-item-title  > Fisik</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                        >
+                          <v-list-item-title>Non Fisik</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </div>
+                <v-btn class="ml-2 mr-2" small icon color="grey darken-1">
                     <v-icon>notifications</v-icon>
                 </v-btn>
                 <v-btn text color="grey darken-1">
@@ -430,7 +498,7 @@
             <v-content fluid class="grey lighten-3">
                 <v-slide-y-reverse-transition group></v-slide-y-reverse-transition>
                 <div>
-                    <v-container fluid class="mt-2 " v-if="!fad">
+                    <v-container fluid  v-if="!fad">
                         <v-sheet class="overflow-y-auto" color="white" max-height="75vh" elevation="10">
                             <table>
                                 <thead>
@@ -472,12 +540,12 @@
                                             </v-btn>
                                         </td>
                                         <td style="width:100px">
-                                            <v-btn icon @click="editOverlay = true">
+                                            <v-btn icon @click="edit(index)">
                                                 <v-icon>
                                                     edit
                                                 </v-icon>
                                             </v-btn>
-                                            <v-btn icon>
+                                            <v-btn icon @click="deleteUsulan(index)">
                                                 <v-icon>
                                                     delete
                                                 </v-icon>
@@ -536,6 +604,31 @@
                         </div>
                     </v-container>
                 </div>
+                <v-dialog width="400" v-model="dialogDelete" >
+                    <v-card >
+                        <v-card-title class=" error">
+                            <v-icon color="white">
+                                delete
+                            </v-icon>
+                            <span class="white--text">
+                                Hapus Usulan
+                            </span>
+                        </v-card-title>
+                        <v-card-text class="mt-2">
+                            Apakah anda yakin ingin menghapus usulan?
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn text @click="dialogDelete = false">
+                                Batal
+                            </v-btn>
+                            <v-btn dark class="error" @click="deleteUsulanConfirmed">
+                                <v-icon left> delete</v-icon>
+                                Hapus
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
 
                 <v-dialog style="z-index:1001" v-model="dialogFisik" persistent max-width="700px">
                     <v-card style="z-index:1001" class="overflow-hidden">
@@ -545,7 +638,7 @@
 " absolute color="white" elevate-on-scroll scroll-target="#scrolling-techniques-7">
 
 
-                            <v-toolbar-title>Tambah Usulan Fisik</v-toolbar-title>
+                            <v-toolbar-title>Tambah Usulan Fisik </v-toolbar-title>
 
                             <v-spacer></v-spacer>
 
@@ -556,59 +649,58 @@
                             <v-btn class="primary" @click="send">
                                 Simpan
                             </v-btn>
-                            <v-progress-linear value="100" absolute bottom color="green">
+                            <v-progress-linear :value="progressValue" buffer-value="100" absolute bottom color="green">
                             </v-progress-linear>
                         </v-app-bar>
                         <v-progress-linear indeterminate color="green"></v-progress-linear>
 
                         <v-sheet id="scrolling-techniques-7" class="overflow-y-auto pt-5" max-height="600">
-                            <v-container class="pl-10 pr-10 pb-10">
-                                <v-row dense class="mt-10">
-
-                                    <v-card-text class="title">
+                            <v-container  class="pl-10 pr-10 pb-10">
+                                <v-row id="form" dense class="mt-10">
+                                    <v-col cols="12" class="title">
                                         Rincian Usulan
-                                    </v-card-text>
+                                    </v-col>
 
                                     <v-col cols="12" sm="6" md="12">
-                                        <v-combobox prepend-inner-icon="account_balance" v-model="pod" outlined
+                                        <v-combobox id="s1" prepend-inner-icon="account_balance" v-model="pod" outlined
                                             :items="pod_items" label="Organisasi Perangkat Daerah"></v-combobox>
                                     </v-col>
 
                                     <v-col cols="12">
-                                        <v-combobox prepend-inner-icon="announcement" outlined v-model="usulan"
+                                        <v-combobox id="s2" prepend-inner-icon="announcement" outlined v-model="usulan"
                                             :items="usulan_items" label="Usulan"></v-combobox>
                                     </v-col>
                                     <v-col cols="6">
 
-                                        <v-text-field Label="Volume" v-model="volume"
+                                        <v-text-field id="s3" Label="Volume" v-model="volume"
                                             prepend-inner-icon="mdi-scale-balance" outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field Label="Satuan" v-model="satuan" prepend-inner-icon="linear_scale"
+                                        <v-text-field id="s4" Label="Satuan" v-model="satuan" prepend-inner-icon="linear_scale"
                                             outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
+                                        <v-textarea id="s5" prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
                                             v-model="output" outlined auto-grow label="Output" rows="3" row-height="30">
                                         </v-textarea>
                                     </v-col>
 
                                     <v-col cols="12">
                                         Foto minimal 2
-                                        <vue-dropzone @vdropzone-file-added="fileAdded"
+                                        <vue-dropzone id="s6" @vdropzone-file-added="fotoAdded"
                                             @vdropzone-queue-complete="photosUploaded"
                                             @vdropzone-complete="afterComplete" ref="myVueDropzone" id="dropzone"
                                             :options="dropzoneOptions"></vue-dropzone>
                                     </v-col>
                                     <v-col cols="12">
                                         File Pendukung maksimal 2
-                                        <vue-dropzone
+                                        <vue-dropzone id="s7" @vdropzone-file-added="fileAdded"
                                             @vdropzone-queue-complete="filesUploaded"
                                             @vdropzone-complete="afterCompleteFiles" ref="myVueDropzoneFiles" id="dropzoneFile"
                                             :options="dropzoneOptionsFiles"></vue-dropzone>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
+                                        <v-textarea id="s8" prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
                                             v-model="alasan_usulan" outlined auto-grow label="Alasan diusulkan" rows="3"
                                             row-height="30"></v-textarea>
                                     </v-col>
@@ -618,24 +710,23 @@
                                             rows="3" row-height="30"></v-textarea>
                                     </v-col>
                                     <v-col cols="12">
-
                                         <v-divider> </v-divider>
                                     </v-col>
-                                    <v-card-text class="title">
+                                    <v-col cols="12" class="title">
                                         Lokasi Usulan
-                                    </v-card-text>
+                                    </v-col >
                                     <v-col cols="12" sm="6" md="12">
-                                        <v-text-field Label="Jalan/alamat" v-model="alamat" prepend-inner-icon="place"
+                                        <v-text-field  id="s9" Label="Jalan/alamat" v-model="alamat" prepend-inner-icon="place"
                                             outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="3">
-                                        <v-text-field Label="RT" v-model="rt" outlined></v-text-field>
+                                        <v-text-field  id="s10" Label="RT" v-model="rt" outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="3">
-                                        <v-text-field Label="RW" v-model="rw" outlined></v-text-field>
+                                        <v-text-field  id="s11" Label="RW" v-model="rw" outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="6">
-                                        <v-autocomplete v-model="kelurahan" prepend-inner-icon="map" outlined
+                                        <v-autocomplete  id="s12" v-model="kelurahan" prepend-inner-icon="map" outlined
                                             :items="kelurahan_items" label="Kelurahan">
                                         </v-autocomplete>
                                     </v-col>
@@ -643,19 +734,19 @@
 
                                         <v-divider> </v-divider>
                                     </v-col>
-                                    <v-card-text class="title">
+                                    <v-col cols="12" class="title">
                                         Rincian Pengusul
-                                    </v-card-text>
+                                    </v-col>
                                     <v-col cols="12" sm="6" md="6">
-                                        <v-text-field Label="Nama Pengusul" v-model="nama_pengusul"
+                                        <v-text-field  id="s13" Label="Nama Pengusul" v-model="nama_pengusul"
                                             prepend-inner-icon="person" outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="6">
-                                        <v-text-field Label="No. HP Pengusul" v-model="hp_pengusul"
+                                        <v-text-field  id="s14" Label="No. HP Pengusul" v-model="hp_pengusul"
                                             prepend-inner-icon="phone" outlined></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="12">
-                                        <v-text-field Label="Alamat Pengusul" v-model="alamat_pengusul"
+                                        <v-text-field  id="s15" Label="Alamat Pengusul" v-model="alamat_pengusul"
                                             prepend-inner-icon="place" outlined></v-text-field>
                                     </v-col>
                                 </v-row>

@@ -7,6 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import * as easings from 'vuetify/es5/services/goto/easing-patterns'
 import Vuetify from 'vuetify'
 import Axios from 'axios';
 import vue2Dropzone from 'vue2-dropzone';
@@ -42,6 +43,11 @@ const app = new Vue({
         vueDropzone: vue2Dropzone
       },
     data: ()=>({
+        filter:[],
+
+        checkProgress: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        progressValue:0,
+        
         snackbar:false,
         snackbarText:'',
         snackbarColor:'',
@@ -53,6 +59,7 @@ const app = new Vue({
         result:'',
         rawData:[],
         tableUsulan:[],
+        tableUsulanTemp:[],
         id:'',
         listFoto:[],
         listFile:[],
@@ -87,6 +94,7 @@ const app = new Vue({
             headers: {  "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content }
         },
         barisPerHalaman: null,
+        dialogDelete:false,
         dialogFoto:false,
         dialogFisik:false,
         dialogNonFisik:false,
@@ -118,6 +126,13 @@ const app = new Vue({
         usulan_items: [
         ],
         kelurahan_items:[],
+        jumlahFoto:0,
+        jumlahFile:0,
+        easing: 'easeInOutCubic',
+        easings: Object.keys(easings),
+        deleteId: -1,
+        deleteIdTable: -1,
+        carousselList:[],
     }),
     beforeMount(){
         var ini = this;
@@ -131,8 +146,176 @@ const app = new Vue({
         });
         
     },
-    
+    watch:{
+        pod:function(val){
+            this.calcProgressValue(val,0);
+        },
+        usulan:function(val){
+            this.calcProgressValue(val,1);
+        },
+        volume:function(val){
+            this.calcProgressValue(val,2);
+        },
+        satuan:function(val){
+            this.calcProgressValue(val,3);
+        },
+        output:function(val){
+            this.calcProgressValue(val,4);
+        },
+        jumlahFoto:function(val){
+            if(this.jumlahFoto>1||this.jumlahFoto<1){
+                this.calcProgressValue(val,5);
+            }
+        },
+        jumlahFile:function(val){
+            if(this.jumlahFile>1||this.jumlahFile<1){
+                this.calcProgressValue(val,6);
+            }
+        },
+        alasan_usulan:function(val){
+            this.calcProgressValue(val,7);
+        },
+        alamat:function(val){
+            this.calcProgressValue(val,8);
+        },
+        rt:function(val){
+            this.calcProgressValue(val,9);
+        },
+        rw:function(val){
+            this.calcProgressValue(val,10);
+        },
+        kelurahan:function(val){
+            this.calcProgressValue(val,11);
+        },
+        nama_pengusul:function(val){
+            this.calcProgressValue(val,12);
+        },
+        hp_pengusul:function(val){
+            this.calcProgressValue(val,13);
+        },
+        alamat_pengusul:function(val){
+            this.calcProgressValue(val,14);
+        },
+
+    },
     methods:{
+        tahunItems(){
+            var awalTahun = 2020;
+            var date = new Date();
+            var currentTahun = Number(date.getFullYear());
+            var tahunList=[];
+            for (let index = awalTahun; index <= currentTahun; index++) {
+                tahunList.push(index)
+            }
+            console.log(tahunList);
+            return tahunList;
+        },
+        update(){
+            console.log("woi");
+            var ini = this;
+            axios.post('/usul/update', {
+                id:ini.tableUsulanTemp.id,
+                usulan:ini.tableUsulanTemp.usulan,
+                kelurahan:ini.tableUsulanTemp.kelurahan,
+                pod: ini.tableUsulanTemp.pod,
+                volume: ini.tableUsulanTemp.volume,
+                satuan: ini.tableUsulanTemp.satuan,
+                alamat: ini.tableUsulanTemp.alamat,
+                alasan_usulan: ini.tableUsulanTemp.alasan_usulan,
+                informasi_tambahan: ini.tableUsulanTemp.informasi_tambahan,
+                output: ini.tableUsulanTemp.output,
+                rt: ini.tableUsulanTemp.rt,
+                rw: ini.tableUsulanTemp.rw,
+                nama_pengusul: ini.tableUsulanTemp.nama_pengusul,
+                hp_pengusul: ini.tableUsulanTemp.hp_pengusul,
+                alamat_pengusul: ini.tableUsulanTemp.alamat_pengusul,
+                itemPerPage: ini.rawData.per_page
+              })
+              .then(function (response) {
+                ini.editOverlay = false;
+                ini.tableUsulan = response.data.data;
+                ini.overlay = false;
+                ini.snackbarText = "Usulan berhasil diperbarui!"
+                ini.snackbarColor = "success"
+                ini.snackbar = true;
+                console.log(response.data.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+                ini.editOverlay = false;
+                ini.snackbarText = "Terjadi kesalahan coba lagi!"
+                ini.snackbarColor = "error"
+                ini.snackbar = true;
+              });
+              this.dialogFisik = false;
+        },
+        caroussel(index){
+            this.carousselList = [];
+            if(index == 0){
+                this.carousselList.push(this.foto1());
+                this.carousselList.push(this.foto2());
+            }else{
+                this.carousselList.push(this.foto2());
+                this.carousselList.push(this.foto1());
+            }
+            console.log(index);
+            this.dialogFoto = true;
+        },
+        downloadFilePendukung(id){
+            if(id==1){
+                window.open('/files/'+this.tableUsulanTemp.file1)
+            }else{
+                window.open('/files/'+this.tableUsulanTemp.file2)
+
+            }
+        },
+        deleteUsulanConfirmed(){
+            var ini = this;
+            ini.snackbar = false;
+            this.loading = true;
+            this.dialogDelete = false;
+            axios.post('/usul/hapus', {
+                id:ini.deleteId,
+              })
+              .then(function (response) {
+                ini.loading = false;
+
+                ini.snackbarText = "Usulan berhasil dihapus!"
+                ini.snackbarColor = "success"
+                ini.snackbar = true;
+                ini.tableUsulan.splice(ini.deleteIdTable, 1)
+              })
+              .catch(function (error) {
+                this.loading = false;
+                ini.snackbarText = "Terjadi kesalahan, coba lagi"
+                ini.snackbarColor = "error"
+                ini.snackbar = true;
+              });
+        },
+        deleteUsulan(index){
+            this.dialogDelete = true;
+            var ini = this;
+            ini.deleteIdTable = index;
+            ini.deleteId = ini.tableUsulan[index]['id'];
+        },
+        calcProgressValue(value,index){
+            if(value==null||value==""){
+                if(this.checkProgress[index] == 0){
+                    this.checkProgress[index] = 0; 
+                }else{
+                    this.checkProgress[index] = 0; 
+                    this.progressValue = this.progressValue - 6.66666666667 ;
+                }
+            }else{
+                if(this.checkProgress[index] == 0){
+                    this.checkProgress[index] = 1; 
+                    this.progressValue = this.progressValue + 6.66666666667 ;
+                }else{
+                    this.checkProgress[index] = 1; 
+                }
+            }
+            console.log(this.progressValue,this.checkProgress);
+        },
         loadTableWithFilter(itemPerPage){
             var ini = this;
             Axios({
@@ -403,9 +586,30 @@ const app = new Vue({
               });
         },
         send(){
-            this.loadingText = "Mengunggah Foto..";
-            this.overlay = true;
-            this.$refs.myVueDropzone.processQueue();
+            var option ={
+                duration: 300,
+                offset: 10,
+                container:"#scrolling-techniques-7"
+              };
+            var isEmpty = this.isFieldEmpty();
+            if(isEmpty != -1){
+                this.$vuetify.goTo(isEmpty,option);
+            }else{
+                this.loadingText = "Mengunggah Foto..";
+                this.overlay = true;
+                this.$refs.myVueDropzone.processQueue();
+            }
+        },
+        isFieldEmpty(){
+            var target = -1; 
+            for (let i = 0; i < this.checkProgress.length; i++) {
+                if(this.checkProgress[i]==0){
+                    target = "#s" +(i+1) ;
+                    break;
+                }
+                
+            }
+            return target;
         },
         photosUploaded(){
             this.loadingText = "Mengunggah File..";
@@ -426,6 +630,7 @@ const app = new Vue({
             console.log(this.listFoto);
         },
         sendUsulanDetail(){
+            console.log("woi");
             var ini = this;
             axios.post('/usul', {
                 usulan:ini.usulan,
@@ -446,26 +651,67 @@ const app = new Vue({
                 nama_pengusul: ini.nama_pengusul,
                 hp_pengusul: ini.hp_pengusul,
                 alamat_pengusul: ini.alamat_pengusul,
+                itemPerPage: ini.rawData.per_page
               })
               .then(function (response) {
-                ini.tableUsulan = response.data;
+                ini.tableUsulan = response.data.data;
                 ini.overlay = false;
                 ini.snackbarText = "Usulan berhasil disimpan!"
                 ini.snackbarColor = "success"
                 ini.snackbar = true;
-                console.log(response);
+                console.log(response.data.data);
               })
               .catch(function (error) {
                 console.log(error);
+                ini.snackbarText = "Terjadi kesalahan coba lagi!"
+                ini.snackbarColor = "error"
+                ini.snackbar = true;
               });
               this.dialogFisik = false;
         },
+        edit(index){
+            this.tableUsulanTemp= this.tableUsulan[index];
+            this.editOverlay= true;
+            console.log(index, this.tableUsulanTemp);
+        },
+        foto1(){
+            var a = 'images/'+this.tableUsulanTemp.foto1; 
+            return a.replace(" ", '%20');
+        },
+        foto2(){
+            var a = 'images/'+this.tableUsulanTemp.foto2; 
+            return a.replace(" ", '%20');
+        },
+        fotoAdded(file){
+            this.jumlahFoto+=1;
+            console.log(this.jumlahFoto);
+        },
         fileAdded(file){
-            console.log(file.upload.filename);
+            this.jumlahFile+=1;
+            console.log(this.jumlahFile);
         },
         batal(){
-         this.dialogFisik = false;
-         this.overlay = false;
+            this.dialogFisik = false;
+            this.overlay = false;
+            this.usulan ="";
+            this.kelurahan="";
+            this.pod="";
+            this.volume="";
+            this.satuan="";
+            this.alamat="";
+            this.alasan_usulan="";
+            this.informasi_tambahan="";
+            this.output="";
+            this.listFoto=[];
+            this.listFile=[];
+            this.jumlahFile=0;
+            this.jumlahFoto=0;
+            this.rt="";
+            this.rw="";
+            this.nama_pengusul="";
+            this.hp_pengusul="";
+            this.alamat_pengusul="";
+
         },
         
         initUsulFisik(){ //get user info ketika ingin mengajukan usulan

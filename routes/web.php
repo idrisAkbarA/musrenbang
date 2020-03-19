@@ -27,6 +27,8 @@ Route::post('/submitFiles','FilesController@store');
 Route::post('/usul','UsulanController@store');
 Route::get('/usulFilter','UsulanController@dataUsulanFilter');
 Route::get('/usul','UsulanController@dataUsulan');
+Route::post('/usul/hapus','UsulanController@hapus');
+Route::post('/usul/update','UsulanController@update');
 
 Route::post('/verif','UsulanController@verifikasi');
 Route::post('/valid','UsulanController@validasi');
