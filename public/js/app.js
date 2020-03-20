@@ -92250,14 +92250,24 @@ var app = new Vue({
   },
   data: function data() {
     return {
-      filter: [],
+      filter: {
+        tahun: null,
+        usulan: null,
+        pod: null,
+        alamat: null,
+        verifikasi: null,
+        validasi: null,
+        prioritas: null
+      },
       checkProgress: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       progressValue: 0,
       snackbar: false,
       snackbarText: '',
       snackbarColor: '',
+      tahun: '',
       editOverlay: false,
       overlay: false,
+      overlayTable: true,
       loadingText: "Memuat...",
       result: '',
       rawData: [],
@@ -92417,6 +92427,7 @@ var app = new Vue({
         tahunList.push(index);
       }
 
+      tahunList.push('Semua');
       console.log(tahunList);
       return tahunList;
     },
@@ -92523,8 +92534,12 @@ var app = new Vue({
 
       console.log(this.progressValue, this.checkProgress);
     },
+    filterTest: function filterTest() {
+      console.log(this.filter);
+    },
     loadTableWithFilter: function loadTableWithFilter(itemPerPage) {
       var ini = this;
+      ini.overlayTable = true;
       axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: '/usulFilter',
@@ -92539,6 +92554,7 @@ var app = new Vue({
         console.log(ini.rawData);
         console.log(ini.tableUsulan);
         console.log("table data loaded!");
+        ini.overlayTable = false;
       })["catch"](function (error) {
         console.log(error);
         console.log("retrying to load table data!");
@@ -92576,6 +92592,7 @@ var app = new Vue({
     nextPage: function nextPage() {
       var ini = this; //console.log(ini.rawData.next_page_url+"$itemPerPage="+ini.barisPerHalaman);
 
+      ini.overlayTable = true;
       axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: ini.rawData.next_page_url + "&itemPerPage=" + ini.barisPerHalaman
@@ -92586,6 +92603,7 @@ var app = new Vue({
         console.log(ini.rawData);
         console.log(ini.tableUsulan);
         console.log("table data loaded!");
+        ini.overlayTable = false;
       }); // .catch(function (error) {
       //     console.log(error);
       //     console.log("retrying to load table data!");
@@ -92594,6 +92612,7 @@ var app = new Vue({
     },
     previousPage: function previousPage() {
       var ini = this;
+      ini.overlayTable = true;
       axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
         url: ini.rawData.prev_page_url + "&itemPerPage=" + ini.barisPerHalaman
@@ -92604,6 +92623,7 @@ var app = new Vue({
         console.log(ini.rawData);
         console.log(ini.tableUsulan);
         console.log("table data loaded!");
+        ini.overlayTable = false;
       }); // .catch(function (error) {
       //     console.log(error);
       //     console.log("retrying to load table data!");

@@ -43,7 +43,15 @@ const app = new Vue({
         vueDropzone: vue2Dropzone
       },
     data: ()=>({
-        filter:[],
+        filter:{
+            tahun:null,
+            usulan:null,
+            pod:null,
+            alamat:null,
+            verifikasi:null,
+            validasi:null,
+            prioritas:null,
+        },
 
         checkProgress: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         progressValue:0,
@@ -51,9 +59,10 @@ const app = new Vue({
         snackbar:false,
         snackbarText:'',
         snackbarColor:'',
-
+        tahun:'',
         editOverlay:false,
         overlay:false,
+        overlayTable : true,
 
         loadingText:"Memuat...",
         result:'',
@@ -207,6 +216,7 @@ const app = new Vue({
             for (let index = awalTahun; index <= currentTahun; index++) {
                 tahunList.push(index)
             }
+            tahunList.push('Semua');
             console.log(tahunList);
             return tahunList;
         },
@@ -316,8 +326,12 @@ const app = new Vue({
             }
             console.log(this.progressValue,this.checkProgress);
         },
+        filterTest(){
+            console.log(this.filter);
+        },
         loadTableWithFilter(itemPerPage){
             var ini = this;
+            ini.overlayTable =true;
             Axios({
                 method:'get',
                 url: '/usulFilter',params:{
@@ -331,6 +345,7 @@ const app = new Vue({
                 console.log(ini.rawData);
                 console.log(ini.tableUsulan);
                 console.log("table data loaded!")
+                ini.overlayTable =false;
             })
             .catch(function (error) {
                 console.log(error);
@@ -369,6 +384,7 @@ const app = new Vue({
         nextPage(){
             var ini = this;
             //console.log(ini.rawData.next_page_url+"$itemPerPage="+ini.barisPerHalaman);
+            ini.overlayTable =true;
             Axios({
                 method:'get',
                 url: ini.rawData.next_page_url+"&itemPerPage="+ini.barisPerHalaman
@@ -379,6 +395,7 @@ const app = new Vue({
                 console.log(ini.rawData);
                 console.log(ini.tableUsulan);
                 console.log("table data loaded!")
+                ini.overlayTable =false;
             })
             // .catch(function (error) {
             //     console.log(error);
@@ -389,6 +406,7 @@ const app = new Vue({
         },
         previousPage(){
             var ini = this;
+            ini.overlayTable =true;
             Axios({
                 method:'get',
                 url: ini.rawData.prev_page_url+"&itemPerPage="+ini.barisPerHalaman
@@ -399,6 +417,7 @@ const app = new Vue({
                 console.log(ini.rawData);
                 console.log(ini.tableUsulan);
                 console.log("table data loaded!")
+                ini.overlayTable =false;
             })
             // .catch(function (error) {
             //     console.log(error);

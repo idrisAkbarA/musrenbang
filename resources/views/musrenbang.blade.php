@@ -436,22 +436,61 @@
                         <v-container>
                             <v-row class="ml-2 mr-2" dense>
                                 <v-col cols="12">
-                                    <div class="title">
+                                    <div class="title d-flex">
                                         Pencarian/Filter
+                                        <v-spacer></v-spacer>
+                                        <v-btn small text>
+                                            <v-icon left>
+                                                close
+                                            </v-icon>
+                                            Reset
+                                        </v-btn>
+                                        <v-btn @click="filterTest()" small class="primary" dark>
+                                            <v-icon left>
+                                                search
+                                            </v-icon>
+                                            Cari
+                                        </v-btn>
                                     </div>
+                                    
+                                    
                                 </v-col>
                                 <v-col cols="12" sm="6" md="2">
-                                    <v-autocomplete dense v-model="tahun" prepend-inner-icon="event" outlined
-                                        :items="tahunItems()" label="Tahun">
-                                    </v-autocomplete>
+                                <v-autocomplete dense v-model="filter.tahun" prepend-inner-icon="event" outlined
+                                    :items="tahunItems()" label="Tahun">
+                                </v-autocomplete>
                                 </v-col>
                                 <v-col cols="4">
-                                    <v-combobox dense prepend-inner-icon="announcement" outlined v-model="usulan"
+                                    <v-combobox dense prepend-inner-icon="announcement" outlined v-model="filter.usulan"
                                     :items="usulan_items" label="Usulan"></v-combobox>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-combobox dense prepend-inner-icon="account_balance" v-model="pod" outlined
+                                    <v-combobox dense prepend-inner-icon="account_balance" v-model="filter.pod" outlined
                                             :items="pod_items" label="Organisasi Perangkat Daerah"></v-combobox>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-text-field v-model="filter.alamat" outlined dense prepend-inner-icon="place" label="Alamat">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-autocomplete dense v-model="filter.kelurahan" prepend-inner-icon="map" outlined
+                                        :items="kelurahan_items" label="kelurahan">
+                                    </v-autocomplete>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-autocomplete dense v-model="filter.verifikasi" prepend-inner-icon="done" outlined
+                                        :items="['-','Tidak','Iya']" label="Verifikasi">
+                                    </v-autocomplete>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-autocomplete dense v-model="filter.validasi" prepend-inner-icon="done_all" outlined
+                                        :items="['-','Tidak','Iya']" label="Validasi">
+                                    </v-autocomplete>
+                                </v-col>
+                                <v-col cols="2">
+                                    <v-autocomplete dense v-model="filter.prioritas" prepend-inner-icon="library_add_check" outlined
+                                        :items="['-','Tidak','Iya']" label="Prioritas">
+                                    </v-autocomplete>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -499,17 +538,25 @@
                 <v-slide-y-reverse-transition group></v-slide-y-reverse-transition>
                 <div>
                     <v-container fluid  v-if="!fad">
-                        <v-sheet class="overflow-y-auto" color="white" max-height="75vh" elevation="10">
-                            <table>
-                                <thead>
-                                    <tr class="red kepala" style="z-index:1000">
-                                        <th>No.</th>
-                                        <th>Nama</th>
-                                        <th>Kelompok</th>
-                                        <th>Volume</th>
-                                        <th>Kelurahan</th>
-                                        <th style="width:200px">Organisasi Perangkat Daerah</th>
-                                        <th style="z-index:10">Verifikasi</th>
+                        <v-sheet class="overflow-y-auto" color="white" height="76vh" elevation="10">
+                          
+                            <v-skeleton-loader
+                            type="table"
+                            class="mx-auto"
+                            :loading="overlayTable"
+                            transition="fade-transition"
+                            >
+
+                                <table>
+                                    <thead>
+                                        <tr class="red kepala" style="z-index:1000">
+                                            <th>No.</th>
+                                            <th>Nama</th>
+                                            <th>Kelompok</th>
+                                            <th>Volume</th>
+                                            <th>Kelurahan</th>
+                                            <th style="width:200px">Organisasi Perangkat Daerah</th>
+                                            <th style="z-index:10">Verifikasi</th>
                                         <th style="z-index:10">Validasi</th>
                                         <th style="z-index:10">Prioritas</th>
                                         <th style="z-index:10">Aksi</th>
@@ -554,7 +601,8 @@
                                     </tr>
                                 </tbody>
                             </table>
-
+                        </v-skeleton-loader>
+                            
                         </v-sheet>
                         <div style=" z-index:1000;">
                             <v-row>
