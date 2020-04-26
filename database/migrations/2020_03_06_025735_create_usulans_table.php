@@ -36,8 +36,8 @@ class CreateUsulansTable extends Migration
             $table->string('validasi')->nullable();
             $table->string('verifikasi')->nullable();
             $table->string('prioritas')->nullable();
-            $table->boolean('loading_verif');
-            $table->boolean('loading_valid');
+            $table->boolean('loading_verifikasi');
+            $table->boolean('loading_validasi');
             $table->boolean('loading_prioritas');
             $table->timestamps();
         });

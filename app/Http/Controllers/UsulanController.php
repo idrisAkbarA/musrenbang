@@ -78,7 +78,7 @@ class UsulanController extends Controller
     {
         try {
             $valid =  Usulan::find($request['id']);
-            $valid->verifikasi = $request['validasi'];
+            $valid->validasi = $request['validasi'];
             $valid->save();
             return "true";
         } catch (\Throwable $th) {
@@ -91,6 +91,7 @@ class UsulanController extends Controller
             $prioritas =  Usulan::find($request->input('id'));
             $prioritas->prioritas = $request->input('prioritas');
             $prioritas->save();
+            // return $request;
             return "true";
         } catch (\Throwable $th) {
             throw $th;
@@ -128,8 +129,8 @@ class UsulanController extends Controller
             $usul->foto2 = $request['foto2'];
             $usul->file1 = $request['file1'];
             $usul->file2 = $request['file2'];
-            $usul->loading_verif = false;
-            $usul->loading_valid = false;
+            $usul->loading_verifikasi = false;
+            $usul->loading_validasi = false;
             $usul->loading_prioritas = false;
             $usul->save();
             return Usulan::orderBy('id', 'desc')->paginate($request['itemPerPage']);
@@ -138,7 +139,29 @@ class UsulanController extends Controller
         }
        
     }
-   
+    public function testFilter(Request $request){
+        $perPage = $request['perPage'];
+        $filter= json_decode($request['filter'],true);
+        $tahun =$filter['tahun'];
+        $filterKeyArray = [];
+        $filterValueArray = [];
+        $finalFilter=[];
+        foreach ($filter as $key => $value) {
+            if($value !=null && $key !='tahun'){
+                array_push($filterKeyArray,$key);
+                array_push($filterValueArray,$value);
+            }
+        }
+        $finalFilter = array_combine($filterKeyArray,$filterValueArray);
+
+        if($tahun!=null && $tahun!="Semua"){
+            $usul = Usulan::whereYear('created_at',$tahun)->where($finalFilter)->orderBy('id', 'desc')->paginate($perPage);
+            return $usul;
+        }
+        $usul = Usulan::where($finalFilter)->orderBy('id', 'desc')->paginate($perPage);
+        return $usul;
+    }
+
     public function update(Request $request)
     {   
         try {
@@ -164,8 +187,8 @@ class UsulanController extends Controller
             // $usul->foto2 = $request['foto2'];
             // $usul->file1 = $request['file1'];
             // $usul->file2 = $request['file2'];
-            // $usul->loading_verif = false;
-            // $usul->loading_valid = false;
+            // $usul->loading_verifikasi = false;
+            // $usul->loading_validasi = false;
             // $usul->loading_prioritas = false;
             $usul->save();
             return Usulan::orderBy('id', 'desc')->paginate($request['itemPerPage']);

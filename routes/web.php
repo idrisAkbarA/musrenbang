@@ -10,12 +10,20 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/musrenbang-admin', function(){
+    return view('musrenbang-admin');
+});
+Route::get('/experiment', function () {
+    return view('experiment');
+});
 Route::get('/', function () {
     return view('pengumuman');
 });
 Route::get('/login', function () {
     return view('login');
+});
+Route::get('/testVuex', function () {
+    return view('testVuex');
 });
 Route::get('/musrenbang', 'UsulanController@index');
 Route::get('/init', 'UsulanController@init');
@@ -29,9 +37,10 @@ Route::get('/usulFilter','UsulanController@dataUsulanFilter');
 Route::get('/usul','UsulanController@dataUsulan');
 Route::post('/usul/hapus','UsulanController@hapus');
 Route::post('/usul/update','UsulanController@update');
+Route::get('/usul/testFilter','UsulanController@testFilter');
 
-Route::post('/verif','UsulanController@verifikasi');
-Route::post('/valid','UsulanController@validasi');
+Route::post('/verifikasi','UsulanController@verifikasi');
+Route::post('/validasi','UsulanController@validasi');
 Route::post('/prioritas','UsulanController@prioritas');
 
 Route::get('/itemPilihan','UsulanController@itemPilihan');

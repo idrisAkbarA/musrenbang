@@ -12,7 +12,17 @@ import Vuetify from 'vuetify'
 import Axios from 'axios';
 import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
+import store from './store';
 Vue.use(Vuetify)
+import Vuesax from 'vuesax'
+
+import 'vuesax/dist/vuesax.css' //Vuesax styles
+Vue.use(Vuesax, {
+  // options here
+})
+
+  
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -29,6 +39,11 @@ Vue.component('drawer', require('./components/drawer.vue').default);
 Vue.component('toolbar', require('./components/toolbar.vue').default);
 Vue.component('timeline', require('./components/timeline.vue').default);
 Vue.component('musrenbang', require('./components/musrenbang.vue').default);
+Vue.component('non-fisik', require('./components/nonFisik.vue').default);
+Vue.component('bar', require('./components/bar.vue').default);
+Vue.component('tambah-usulan', require('./components/tambah-usulan.vue').default);
+Vue.component('filter-musrenbang', require('./components/filter.vue').default);
+Vue.component('experiment', require('./components/experiment.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -38,6 +53,7 @@ Vue.component('musrenbang', require('./components/musrenbang.vue').default);
 const vuetify = new Vuetify();
 const app = new Vue({
     el: '#app',
+    store,
     vuetify,
     components: {
         vueDropzone: vue2Dropzone
@@ -55,6 +71,9 @@ const app = new Vue({
 
         checkProgress: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         progressValue:0,
+        
+        checkProgressNonFisik: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        progressValueNonFisik:0,
         
         snackbar:false,
         snackbarText:'',
@@ -107,7 +126,7 @@ const app = new Vue({
         dialogFoto:false,
         dialogFisik:false,
         dialogNonFisik:false,
-        drawer: true,
+        drawer: null,
         loading: false, //* loading halaman
         show1: false, //*password
         dialog: false, //*password
@@ -116,6 +135,15 @@ const app = new Vue({
         off:"border-left: 6px solid orange;",
         hasSaved: false,
         model: null,
+        usulanNonFisik:"",
+        podNonFisik: "",
+        alasan_usulanNonFisik: "",
+        informasi_tambahanNonFisik: "",
+        outputNonFisik: "",
+        nama_pengusulNonFisik: "",
+        hp_pengusulNonFisik: "",
+        alamat_pengusulNonFisik: "",
+        
         usulan:"",
         pod: "",
         volume: "",
@@ -156,6 +184,29 @@ const app = new Vue({
         
     },
     watch:{
+        podNonFisik:function(val){
+            this.calcProgressValue(val,0);
+        },
+        usulanNonFisik:function(val){
+            this.calcProgressValueNonFisik(val,1);
+        },
+        outputNonFisik:function(val){
+            this.calcProgressValueNonFisik(val,4);
+        },
+        alasan_usulanNonFisik:function(val){
+            this.calcProgressValueNonFisik(val,7);
+        },
+        nama_pengusulNonFisik:function(val){
+            this.calcProgressValueNonFisik(val,12);
+        },
+        hp_pengusulNonFisik:function(val){
+            this.calcProgressValueNonFisik(val,13);
+        },
+        alamat_pengusulNonFisik:function(val){
+            this.calcProgressValueNonFisik(val,14);
+        },
+
+
         pod:function(val){
             this.calcProgressValue(val,0);
         },
@@ -326,8 +377,55 @@ const app = new Vue({
             }
             console.log(this.progressValue,this.checkProgress);
         },
+        calcProgressValueNonFisik(value,index){
+            if(value==null||value==""){
+                if(this.checkProgressNonFisik[index] == 0){
+                    this.checkProgressNonFisik[index] = 0; 
+                }else{
+                    this.checkProgressNonFisik[index] = 0; 
+                    this.progressValue = this.progressValue - 6.66666666667 ;
+                }
+            }else{
+                if(this.checkProgressNonFisik[index] == 0){
+                    this.checkProgressNonFisik[index] = 1; 
+                    this.progressValue = this.progressValue + 6.66666666667 ;
+                }else{
+                    this.checkProgressNonFisik[index] = 1; 
+                }
+            }
+            console.log(this.progressValue,this.checkProgressNonFisik);
+        },
+        filterReset(){
+            this.filter= {
+                tahun:null,
+                usulan:null,
+                pod:null,
+                alamat:null,
+                verifikasi:null,
+                validasi:null,
+                prioritas:null,
+            };
+        },
         filterTest(){
-            console.log(this.filter);
+            var ini = this;
+            ini.overlayTable =true;
+            console.log(ini.rawData.per_page);
+            Axios({
+                method:'get',
+                url: '/usul/testFilter',params:{
+                    filter:ini.filter,
+                    perPage:ini.rawData.per_page
+                }
+            }).then(function(response){
+                ini.rawData = response.data;
+                ini.tableUsulan = ini.rawData.data;
+                console.log(response.data);
+                ini.overlayTable =false;
+            })
+            .catch(function (error) {
+                console.log(error);
+            
+            });
         },
         loadTableWithFilter(itemPerPage){
             var ini = this;
@@ -463,10 +561,10 @@ const app = new Vue({
             });
         },
         loader_verif(index){
-            return this.tableUsulan[index].loading_verif;
+            return this.tableUsulan[index].loading_verifikasi;
         },
         loader_valid(index){
-            return this.tableUsulan[index].loading_valid;
+            return this.tableUsulan[index].loading_validasi;
         },
         loader_prioritas(index){
             return this.tableUsulan[index].loading_prioritas;
@@ -486,7 +584,7 @@ const app = new Vue({
         verifikasi(index){
             var ini = this;
             var result = this.tableUsulan[index].verifikasi;
-            this.tableUsulan[index].loading_verif = true;
+            this.tableUsulan[index].loading_verifikasi = true;
             if(this.tableUsulan[index].verifikasi == "iya"){
                 result = "tidak"
             }else{
@@ -503,12 +601,12 @@ const app = new Vue({
                 if(response.data == true){
                     console.log(result);
                     ini.tableUsulan[index].verifikasi = result;
-                    ini.tableUsulan[index].loading_verif = false;
+                    ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Status usulan berhasil diperbarui!"
                     ini.snackbarColor = "success"
                     ini.snackbar = true;
                 }else{
-                    ini.tableUsulan[index].loading_verif = false;
+                    ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Terjadi kesalahan, coba lagi"
                     ini.snackbarColor = "error"
                     ini.snackbar = true;
@@ -516,8 +614,8 @@ const app = new Vue({
               })
               .catch(function (error) {
                 console.log(error);
-                ini.tableUsulan[index].loading_verif = false;
-                ini.tableUsulan[index].loading_verif = false;
+                ini.tableUsulan[index].loading_verifikasi = false;
+                ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Terjadi kesalahan, coba lagi"
                     ini.snackbarColor = "error"
                     ini.snackbar = true;
@@ -527,7 +625,7 @@ const app = new Vue({
             
             var ini = this;
             var result = this.tableUsulan[index].validasi;
-            this.tableUsulan[index].loading_valid = true;
+            this.tableUsulan[index].loading_validasi = true;
             if(this.tableUsulan[index].validasi == "iya"){
                 result = "tidak"
             }else{
@@ -543,13 +641,13 @@ const app = new Vue({
                 if(response.data == true){
                     console.log(result);
                     ini.tableUsulan[index].validasi = result;
-                    ini.tableUsulan[index].loading_valid = false;
+                    ini.tableUsulan[index].loading_validasi = false;
                     ini.snackbarText = "Status usulan berhasil diperbarui!"
                     ini.snackbarColor = "success"
                     ini.snackbar = true;
                 }else{
-                    ini.tableUsulan[index].loading_valid = false;
-                    ini.tableUsulan[index].loading_verif = false;
+                    ini.tableUsulan[index].loading_validasi = false;
+                    ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Terjadi kesalahan, coba lagi"
                     ini.snackbarColor = "error"
                     ini.snackbar = true;
@@ -557,8 +655,8 @@ const app = new Vue({
               })
               .catch(function (error) {
                 console.log(error);
-                ini.tableUsulan[index].loading_valid = false;
-                ini.tableUsulan[index].loading_verif = false;
+                ini.tableUsulan[index].loading_validasi = false;
+                ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Terjadi kesalahan, coba lagi"
                     ini.snackbarColor = "error"
                     ini.snackbar = true;
@@ -589,7 +687,7 @@ const app = new Vue({
                     ini.snackbar = true;
                 }else{
                     ini.tableUsulan[index].loading_prioritas = false;
-                    ini.tableUsulan[index].loading_verif = false;
+                    ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Terjadi kesalahan, coba lagi"
                     ini.snackbarColor = "error"
                     ini.snackbar = true;
@@ -598,7 +696,7 @@ const app = new Vue({
               .catch(function (error) {
                 console.log(error);
                 ini.tableUsulan[index].loading_prioritas = false;
-                ini.tableUsulan[index].loading_verif = false;
+                ini.tableUsulan[index].loading_verifikasi = false;
                     ini.snackbarText = "Terjadi kesalahan, coba lagi"
                     ini.snackbarColor = "error"
                     ini.snackbar = true;
@@ -708,6 +806,18 @@ const app = new Vue({
         fileAdded(file){
             this.jumlahFile+=1;
             console.log(this.jumlahFile);
+        },
+        batalNonFisik(){
+            this.dialogNonFisik = false;
+            this.usulan ="";
+            this.pod="";
+            this.alasan_usulan="";
+            this.informasi_tambahan="";
+            this.output="";
+            this.listFile=[];
+            this.nama_pengusul="";
+            this.hp_pengusul="";
+            this.alamat_pengusul="";
         },
         batal(){
             this.dialogFisik = false;

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('pengumuman')
+@section('pengumuman')//highlight link yg dipilih di sidebar
     green lighten-5
 @endsection
 
@@ -9,5 +9,5 @@
     <tambah-usulan></tambah-usulan>
 @endsection
 @section('content')
-    <timeline></timeline>
+    <experiment></experiment>
 @endsection

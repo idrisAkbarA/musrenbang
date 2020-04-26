@@ -32,7 +32,7 @@
                 <v-progress-linear :active="loading" indeterminate absolute bottom color="orange">
                 </v-progress-linear>
               </v-system-bar>
-            <v-navigation-drawer color="white" class="print" v-model="drawer" app>
+            <v-navigation-drawer floating color="white" class="print" v-model="drawer" app>
                 <v-card class="d-flex justify-center pt-4 pr-2 pl-2" flat tile>
                     <v-img max-width="70" src="{{asset('img/logo.gif')}}">
                     </v-img>
@@ -94,8 +94,10 @@
 
                 </v-list>
             </v-navigation-drawer>
-
-            <v-app-bar class="print" app color="grey lighten-3" elevate-on-scroll dense>
+            <bar v-model="drawer">
+                @yield('bar-components')
+            </bar>
+            {{-- <v-app-bar class="print" app color="grey lighten-3" elevate-on-scroll dense>
                 <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
                 <v-toolbar-title class="grey--text text--darken-1">
                     <span class="font-weight-bold"> E-MUSRENBANG </span>
@@ -108,12 +110,10 @@
                 <v-btn text color="grey darken-1">
                     <v-icon left>logout</v-icon><span>Keluar</span>
                 </v-btn>
-                {{-- <v-progress-linear :active="loading" indeterminate absolute bottom color="white accent-4">
-                </v-progress-linear> --}}
-            </v-app-bar>
+            </v-app-bar> --}}
             <v-content class="grey lighten-3">
                 <v-slide-y-reverse-transition>
-                    <div class="mt-2 ml-4 mr-10" v-if="!fad">
+                    <div style="height:98%; padding-bottom:1em;" class="mt-2 ml-4 mr-10" v-if="!fad">
                         @yield('content')
                     </div>
                 </v-slide-y-reverse-transition>

@@ -143,11 +143,13 @@ class initDB extends Command
             $pod->nama = $listPOD[$i];
             $pod->save();
         }
+        echo "\nList OPD berhasil disimpan! \n";
         for ($i=0; $i < \sizeof($listItemUsulan) ; $i++) { 
             $pod = new ItemUsulan;
             $pod->nama = $listItemUsulan[$i];
             $pod->save();
         }
+        echo "List Item Usulan berhasil disimpan! \n";
         $user = new User;
         $user->name = "admin";
         $user->id_kel = '-';
@@ -163,5 +165,6 @@ class initDB extends Command
             $user->password = Hash::make(strtolower(str_replace(' ', '', $listKelurahan[$i].'123')));
             $user->save();
         }
+        echo "List user berhasil disimpan! \n";
     }
 }
