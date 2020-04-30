@@ -44,6 +44,7 @@ Vue.component('bar', require('./components/bar.vue').default);
 Vue.component('tambah-usulan', require('./components/tambah-usulan.vue').default);
 Vue.component('filter-musrenbang', require('./components/filter.vue').default);
 Vue.component('experiment', require('./components/experiment.vue').default);
+Vue.component('edit-fisik', require('./components/EditFisik.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -79,7 +80,7 @@ const app = new Vue({
         snackbarText:'',
         snackbarColor:'',
         tahun:'',
-        editOverlay:false,
+        editOverlay:true,
         overlay:false,
         overlayTable : true,
 

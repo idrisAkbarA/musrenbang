@@ -8,5 +8,6 @@
     <tambah-usulan></tambah-usulan>
 @endsection
 @section('content')
+   
     <musrenbang></musrenbang>
 @endsection

@@ -8,20 +8,48 @@ export default new Vuex.Store({
     state: {
         test: "test from Vuex",
         rawData: [],
-        
+        items:{},
     },
     getters: {
         rawData: state => state.rawData,
         getTest: state => state.test,
         tableUsulan: state => state.rawData.data,
         barisPerHalaman: state => state.rawData.per_page,
+        kelurahan_items : state => state.items["kelurahan_items"],
+        pod_items :state => state.items["pod_items"],
+        usulan_items: state => state.items["usulan_items"],
     },
     mutations: {
         fillRawData(state, data) {
             state.rawData = data;
+        },
+        fillItems(state,data){
+            state.items = {
+                kelurahan_items : data['kelurahan'],
+                pod_items : data['pod'],
+                usulan_items: data['itemUsulan'],
+            };
         }
     },
     actions: {
+        loadInitData({commit,dispatch,state}){
+            var ini = this;
+            Axios({
+                method:'get',
+                url: '/itemPilihan'
+            }).then(function(response){
+                commit('fillItems',response.data);
+                // ini.kelurahan_items = response.data['kelurahan'];
+                // ini.pod_items = response.data['pod'];
+                // ini.usulan_items = response.data['itemUsulan'];
+                console.log("init data loaded!")
+                console.log("woiiiii ini datanya items:");
+            }).catch(function (error) {
+                console.log(error);
+                console.log("retrying to load init data!");
+                dispatch('loadInitData');
+            });
+        },
         getTableUsulan({commit},barisPerHalaman) {
             return new Promise((resolve, reject) => {
                 var ini = this;
@@ -35,13 +63,6 @@ export default new Vuex.Store({
                     .then(function(response) {
                         console.log(response.data);
                         commit('fillRawData', response.data );
-
-                        // ini.rawData = response.data;
-                        // ini.tableUsulan = ini.rawData.data;
-                        // ini.barisPerHalaman = ini.rawData.per_page;
-                        // console.log(ini.rawData);
-                        // console.log(ini.tableUsulan);
-                        // console.log("table data loaded!");
                         resolve(response.data);
                     })
                     .catch(function(error) {
@@ -75,22 +96,12 @@ export default new Vuex.Store({
                   .then(function (response) {
                     commit('fillRawData', response.data );
                     resolve(response.data);
-                    //   ini.editOverlay = false;
-                    // ini.overlay = false;
-                    // ini.snackbarText = "Usulan berhasil diperbarui!"
-                    // ini.snackbarColor = "success"
-                    // ini.snackbar = true;
                     console.log(response.data.data);
                   })
                   .catch(function (error) {
                     console.log(error);
                     reject(error);
-                    // ini.editOverlay = false;
-                    // ini.snackbarText = "Terjadi kesalahan coba lagi!"
-                    // ini.snackbarColor = "error"
-                    // ini.snackbar = true;
                   });
-                //   this.dialogFisik = false;
             });
         },
         nextPage({commit,state}){

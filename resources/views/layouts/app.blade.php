@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-</head><link rel="icon" href="{{asset("img/logo.gif")}}">
+</head>
+<link rel="icon" href="{{asset("img/logo.gif")}}">
 
 <body>
     <div id="app">
@@ -23,25 +24,25 @@
                 </v-slide-y-reverse-transition>
                 <v-slide-y-reverse-transition>
                     <div v-if="fad">
-                         Memuat...
+                        Memuat...
                     </div>
                 </v-slide-y-reverse-transition>
-                        
+
                 <v-spacer></v-spacer>
                 <span>12:30</span>
                 <v-progress-linear :active="loading" indeterminate absolute bottom color="orange">
                 </v-progress-linear>
-              </v-system-bar>
+            </v-system-bar>
             <v-navigation-drawer floating color="white" class="print" v-model="drawer" app>
                 <v-card class="d-flex justify-center pt-4 pr-2 pl-2" flat tile>
                     <v-img max-width="70" src="{{asset('img/logo.gif')}}">
                     </v-img>
-                        <v-card-text> E-MUSRENBANG KECAMATAN PAYUNG SEKAKI</v-card-title>
-                    </v-card>
-                    <v-divider></v-divider>
-                    <div class="pt-2 pl-4 pr-4">
-                        Selamat Datang Operator Kelurahan A
-                    </div>
+                    <v-card-text> E-MUSRENBANG KECAMATAN PAYUNG SEKAKI</v-card-title>
+                </v-card>
+                <v-divider></v-divider>
+                <div class="pt-2 pl-4 pr-4">
+                    Selamat Datang Operator Kelurahan A
+                </div>
                 <v-list tile dense>
                     <v-list-item @click="" class="@yield('dashboard')">
                         <v-list-item-action>
@@ -117,7 +118,7 @@
                         @yield('content')
                     </div>
                 </v-slide-y-reverse-transition>
-                </v-content>
+            </v-content>
         </v-app>
     </div>
     <script src="{{asset('js/app.js')}}">

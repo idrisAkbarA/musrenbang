@@ -1,11 +1,15 @@
 <template>
+
+   
   <v-container
     fluid
     style=" height:100%; position:relative"
   >
+   <edit-fisik v-model="editOverlay" :index="index"></edit-fisik>
     <!-- <transition name="simp"> -->
 
     <!-- v-if="show" -->
+    
     <v-sheet
       :style="sheetHeightClass.sheetStyle"
       class="overflow-y-auto"
@@ -77,10 +81,11 @@
                   {{item.prioritas}}
                 </v-btn>
               </td>
+                  <!-- @click="edit(index)" -->
               <td style="width:100px">
                 <v-btn
-                  icon
                   @click="edit(index)"
+                  icon
                 >
                   <v-icon>
                     edit
@@ -165,13 +170,14 @@
     </div>
 
     <!-- </transition> -->
+  
   </v-container>
 
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  created() {
+  beforeMount() {
     var ini = this;
     this.getTable(15)
       .then(function(response) {
@@ -179,15 +185,10 @@ export default {
         ini.overlayTable = false;
       })
       .catch(function(error) {
-        console.log(error);
+        console.log(" wak error ");
         ini.getTable(15);
       });
-  },
-  mounted() {
-    var ini = this;
-    setTimeout(function() {
-      ini.show = true;
-    }, 200);
+      this.loadInitData();
   },
   computed: {
     ...mapGetters(["tableUsulan", "rawData"]),
@@ -218,6 +219,8 @@ export default {
   },
   data() {
     return {
+      index:null,
+      editOverlay:false,
       show: false,
       overlayTable: true,
       sheetHeightClass: {
@@ -228,11 +231,15 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["nextPage", "prevPage", "updateStatus"]),
+    ...mapActions(["nextPage", "prevPage", "updateStatus","loadInitData"]),
     ...mapActions({
       getTable: "getTableUsulan",
       updateTable: "updateTableUsulan"
     }),
+    edit(index){
+      this.editOverlay=true;
+      this.index=index;
+    },
     toggleStatus(index, status) {
       var ini = this;
       var obj = { index: index, status: status };
