@@ -9,6 +9,9 @@ export default new Vuex.Store({
         test: "test from Vuex",
         rawData: [],
         items:{},
+        snackbar: false,
+        snackbarText: "",
+        snackbarColor: "",
     },
     getters: {
         rawData: state => state.rawData,
@@ -29,6 +32,11 @@ export default new Vuex.Store({
                 pod_items : data['pod'],
                 usulan_items: data['itemUsulan'],
             };
+        },
+        fillSnackbar(state,dataObj){
+            state.snackbarColor = dataObj.color;
+            state.snackbarText = dataObj.text;
+            state.snackbar = dataObj.snackbar;
         }
     },
     actions: {
@@ -50,7 +58,7 @@ export default new Vuex.Store({
                 dispatch('loadInitData');
             });
         },
-        getTableUsulan({commit},barisPerHalaman) {
+        getTableUsulan({commit,dispatch},barisPerHalaman) {
             return new Promise((resolve, reject) => {
                 var ini = this;
                 Axios({
@@ -67,9 +75,15 @@ export default new Vuex.Store({
                     })
                     .catch(function(error) {
                         console.log(error);
+                        dispatch('getTableUsulan',15);
                         reject(error);
                     });
             });
+        },
+        store({commit},dataObj){
+            return new Promise((resolve,reject)=>{
+
+            })
         },
         updateTableUsulan({commit, state},dataObj) {
             return new Promise((resolve, reject) => {

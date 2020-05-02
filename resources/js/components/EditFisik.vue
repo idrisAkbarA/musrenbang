@@ -6,14 +6,16 @@
       style="z-index:1008"
       v-model="dialogFoto"
     >
-      <v-carousel v-model="carousselIndex">
+      <v-carousel
+        v-model="carousselIndex"
+        show-arrows-on-hover
+      >
+        <!-- reverse-transition="fade-transition"
+          transition="fade-transition" -->
         <v-carousel-item
           v-for="n in 2"
           :key="n"
           :src="carousselList[n-1]"
-          
-          reverse-transition="fade-transition"
-          transition="fade-transition"
         ></v-carousel-item>
       </v-carousel>
 
@@ -34,7 +36,7 @@
           <div style="position: fixed; top:2em; right:2em">
             <v-btn
               text
-              @click="editOverlay = false"
+              @click="batal()"
             >batal</v-btn>
             <v-btn
               color="primary"
@@ -186,7 +188,9 @@
                 style="grid-area: gambar1"
               >
                 <v-img
-                  aspect-ratio
+                  min-height="100%"
+                  min-width="100%"
+                  max-height="100%"
                   :src="foto1()"
                 ></v-img>
               </v-card>
@@ -202,7 +206,12 @@
                 :elevation="hover ? 20 : 6"
                 style="grid-area: gambar2"
               >
-                <v-img :src="foto2()"></v-img>
+                <v-img
+                  min-height="100%"
+                  min-width="100%"
+                  max-height="100%"
+                  :src="foto2()"
+                ></v-img>
               </v-card>
             </template>
           </v-hover>
@@ -329,6 +338,21 @@
         </div>
       </v-slide-y-reverse-transition>
     </v-overlay>
+    <v-snackbar
+      v-model="snackbar"
+      :color="snackbarColor"
+      dark
+      multi-line
+    >
+      {{ snackbarText }}
+      <v-btn
+        color="white"
+        text
+        @click="snackbar = false"
+      >
+        Tutup
+      </v-btn>
+    </v-snackbar>
   </div>
 
 </template>
@@ -343,7 +367,28 @@ export default {
     prop: "value",
     event: "editClicked"
   },
+  watch:{
+    tableUsulan:((value)=>{
+      console.log(value);
+    }),
+    value:function(value){
+      console.log(value);
+      if(value){
+        this.tableUsulanTemp = JSON.parse(JSON.stringify(this.tableUsulan[this.$props.index]));
+        this.temp = this.tableUsulan[this.$props.index];
+      }else{
+        console.log("called")
+        // this.tableUsulanTemp = this.temp;
+        this.tableUsulanTemp = {};
+        console.log(this.tableUsulanTemp)
+        console.log(this.tableUsulan[this.$props.index])
+        console.log(this.$store.state.rawData.data[this.$props.index])
+        // this.tableUsulan = this.temp;
+      }
+    }
+  },
   computed: {
+ 
     ...mapGetters([
       "tableUsulan",
       "rawData",
@@ -351,28 +396,53 @@ export default {
       "pod_items",
       "usulan_items"
     ]),
-    tableUsulanTemp: function() {
-      return this.tableUsulan[this.$props.index];
-    },
     editOverlay: {
       get: function() {
         console.log(this.value);
         return this.value;
       },
       set: function(value) {
-        console.log("clicked");
+        console.log("edit button clicked");
         this.$emit("editClicked", value);
       }
     }
   },
   data() {
     return {
+      temp:null,
+      tableUsulanTemp:{},
+      snackbar: false,
+      snackbarText: "",
+      snackbarColor: "",
       dialogFoto: false,
       carousselList: [],
-      carousselIndex:0,
+      carousselIndex: 0
     };
   },
+  // beforeUpdate(){
+  //   console.log("before update");
+  //   this.tableUsulanTemp = this.tableUsulan[this.$props.index];
+  // },
   methods: {
+    ...mapActions(["updateTableUsulan"]),
+    batal(){
+      this.editOverlay = false;
+    },
+    update() {
+      var ini = this;
+      this.updateTableUsulan(ini.tableUsulanTemp)
+        .then(() => {
+          ini.editOverlay = false;
+          ini.snackbarText = "Usulan berhasil diperbarui!";
+          ini.snackbarColor = "success";
+          ini.snackbar = true;
+        })
+        .catch(() => {
+          ini.snackbarText = "Terjadi kesalahan coba lagi!";
+          ini.snackbarColor = "error";
+          ini.snackbar = true;
+        });
+    },
     foto1() {
       var a = "images/" + this.tableUsulanTemp.foto1;
       return a.replace(" ", "%20");
@@ -406,6 +476,7 @@ export default {
 };
 </script>
 <style  scoped>
+
 .editGrid {
   height: 100vh;
   padding: 5em;
@@ -418,4 +489,35 @@ export default {
     "rincian lokasi lokasi"
     "rincian pengusul pengusul";
 }
+::-webkit-scrollbar {
+  width: 7px;
+
+  margin: 0px;
+  transition: 1s ease;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  background: transparent;
+
+  margin: 0px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  transition: 1s ease;
+  background: rgb(187, 184, 184);
+
+  border-radius: 25px;
+
+  margin: 0px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  transition: 1s ease;
+  background: #555;}
 </style>

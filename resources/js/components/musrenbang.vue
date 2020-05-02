@@ -1,15 +1,17 @@
 <template>
 
-   
   <v-container
     fluid
     style=" height:100%; position:relative"
   >
-   <edit-fisik v-model="editOverlay" :index="index"></edit-fisik>
+    <edit-fisik
+      v-model="editOverlay"
+      :index="index"
+    ></edit-fisik>
     <!-- <transition name="simp"> -->
 
     <!-- v-if="show" -->
-    
+
     <v-sheet
       :style="sheetHeightClass.sheetStyle"
       class="overflow-y-auto"
@@ -81,7 +83,7 @@
                   {{item.prioritas}}
                 </v-btn>
               </td>
-                  <!-- @click="edit(index)" -->
+              <!-- @click="edit(index)" -->
               <td style="width:100px">
                 <v-btn
                   @click="edit(index)"
@@ -168,14 +170,29 @@
         </v-col>
       </v-row>
     </div>
+    <v-snackbar
+      v-model="sn"
+      :color="snackbarColor"
+      dark
+      multi-line
+    >
+      {{ snackbarText }}
+      <v-btn
+        color="white"
+        text
+        @click="snackbar = false"
+      >
+        Tutup
+      </v-btn>
+    </v-snackbar>
 
     <!-- </transition> -->
-  
+
   </v-container>
 
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState,mapMutations } from "vuex";
 export default {
   beforeMount() {
     var ini = this;
@@ -188,10 +205,18 @@ export default {
         console.log(" wak error ");
         ini.getTable(15);
       });
-      this.loadInitData();
+    this.loadInitData();
   },
   computed: {
+    ...mapState(["snackbar", "snackbarColor", "snackbarText"]),
     ...mapGetters(["tableUsulan", "rawData"]),
+    sn: {
+      get: function(){
+        console.log(this.snackbar)
+        return this.snackbar
+      },
+      set: function(value){ this.fillSnackbar({ snackbar: value, color: "", text: "" })}
+    },
 
     //* Jika tabel usulan = 5 maka kecilkan tampilan tabel
     isFive: function() {
@@ -219,8 +244,8 @@ export default {
   },
   data() {
     return {
-      index:null,
-      editOverlay:false,
+      index: null,
+      editOverlay: false,
       show: false,
       overlayTable: true,
       sheetHeightClass: {
@@ -231,29 +256,41 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["nextPage", "prevPage", "updateStatus","loadInitData"]),
+    ...mapMutations(["fillSnackbar"]),
+    ...mapActions(["nextPage", "prevPage", "updateStatus", "loadInitData"]),
     ...mapActions({
       getTable: "getTableUsulan",
       updateTable: "updateTableUsulan"
     }),
-    edit(index){
-      this.editOverlay=true;
-      this.index=index;
+    edit(index) {
+      this.editOverlay = true;
+      this.index = index;
     },
     toggleStatus(index, status) {
       var ini = this;
       var obj = { index: index, status: status };
-      this.updateStatus(obj).then(function(response){
-        const capitalized = status.charAt(0).toUpperCase() + status.slice(1)
-        const noti = ini.$vs.notification({
-          square: true,
-            color:'success',
-            position:'top-right',
+      this.updateStatus(obj).then(function(response) {
+        const capitalized = status.charAt(0).toUpperCase() + status.slice(1);
+        const noti = ini.$vs
+          .notification({
+            square: true,
+            color: "success",
+            position: "top-right",
             title: `${capitalized} sukses`,
-            text: 'Verifikasi berhasil diperbarui!'
+            text: `${capitalized}  berhasil diperbarui!`
           })
         console.log("reached");
-      });
+      }).catch(error => {
+            const capitalized =
+              status.charAt(0).toUpperCase() + status.slice(1);
+            const noti = ini.$vs.notification({
+              square: true,
+              color: "danger",
+              position: "top-right",
+              title: `${capitalized} gagal`,
+              text: `Terjadi kesalahan, coba refresh halaman`
+            });
+          });
     },
     next() {
       this.overlayTable = true;

@@ -15,6 +15,7 @@ class CreateUsulansTable extends Migration
     {
         Schema::create('usulans', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('jenis'); //fisik/nonfisik
             $table->string('usulan');
             $table->string('pod');
             $table->string('kelurahan');
