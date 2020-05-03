@@ -27,8 +27,16 @@ class UsulanController extends Controller
             //code...
             $id = $request['id'];
             $usulan = Usulan::find($id);
+            if($usulan['jenis'] == "Fisik"){
+                // \File::delete($filename);
+                $a=\File::exists(public_path('files'). $usulan['file1']);
+                unlink(public_path('files')."/". $usulan['file1']);
+                unlink(public_path('files'). "/".$usulan['file2']);
+                unlink(public_path('images'). "/".$usulan['foto1']);
+                unlink(public_path('images'). "/".$usulan['foto2']);
+            }
             $usulan->delete();
-            return 'true';
+            return 'true'.$a;
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -109,6 +117,7 @@ class UsulanController extends Controller
         try {
             //code...
             $usul =  new usulan;
+            $usul->jenis = $request['jenis'];
             $usul->usulan = $request['usulan'];
             $usul->pod = $request['pod'];
             $usul->kelurahan = $request['kelurahan'];

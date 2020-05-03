@@ -35,13 +35,15 @@
       </v-list>
     </v-menu>
     <fisik v-model="dialogFisik"></fisik>
+    <non-fisik v-model="dialogNonFisik"></non-fisik>
   </div>
 </template>
 <script>
 export default {
     data() {
         return {
-            dialogFisik:false
+            dialogFisik:false,
+            dialogNonFisik:false
         }
     },
 };

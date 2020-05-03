@@ -8,6 +8,10 @@
       v-model="editOverlay"
       :index="index"
     ></edit-fisik>
+    <edit-non-fisik
+      v-model="editNonFisikOverlay"
+      :index="index"
+    ></edit-non-fisik>
     <!-- <transition name="simp"> -->
 
     <!-- v-if="show" -->
@@ -23,7 +27,7 @@
 
       <v-skeleton-loader
         type="table"
-        :loading="overlayTable"
+        :loading="isTableLoading"
         transition="fade-transition"
       >
 
@@ -51,7 +55,7 @@
             >
               <td class="number">{{index+rawData.from}}</td>
               <td>{{item.usulan}}</td>
-              <td>Fisik</td>
+              <td>{{item.jenis}}</td>
               <td>{{item.volume}}</td>
               <td>Air Hitam</td>
               <td>{{item.pod}}</td>
@@ -170,6 +174,41 @@
         </v-col>
       </v-row>
     </div>
+    <v-dialog
+      width="400"
+      v-model="dialogDelete"
+    >
+      <v-card>
+        <v-card-title class=" error">
+          <v-icon color="white">
+            delete
+          </v-icon>
+          <span class="white--text">
+            Hapus Usulan
+          </span>
+        </v-card-title>
+        <v-card-text class="mt-2">
+          Apakah anda yakin ingin menghapus usulan?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            @click="dialogDelete = false"
+          >
+            Batal
+          </v-btn>
+          <v-btn
+            dark
+            class="error"
+            @click="deleteUsulanConfirmed"
+          >
+            <v-icon left> delete</v-icon>
+            Hapus
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-snackbar
       v-model="sn"
       :color="snackbarColor"
@@ -192,30 +231,35 @@
 
 </template>
 <script>
-import { mapActions, mapGetters, mapState,mapMutations } from "vuex";
+import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
 export default {
   beforeMount() {
     var ini = this;
-    this.getTable(15)
-      .then(function(response) {
-        console.log("yeay!");
-        ini.overlayTable = false;
-      })
-      .catch(function(error) {
-        console.log(" wak error ");
-        ini.getTable(15);
-      });
+    this.getTable(15).then(function(response) {
+      console.log("yeay!");
+    });
+    // .catch(function(error) {
+    //   console.log(" wak error ");
+    //   ini.getTable(15);
+    // });
     this.loadInitData();
   },
   computed: {
-    ...mapState(["snackbar", "snackbarColor", "snackbarText"]),
+    ...mapState([
+      "snackbar",
+      "snackbarColor",
+      "snackbarText",
+      "isTableLoading"
+    ]),
     ...mapGetters(["tableUsulan", "rawData"]),
     sn: {
-      get: function(){
-        console.log(this.snackbar)
-        return this.snackbar
+      get: function() {
+        console.log(this.snackbar);
+        return this.snackbar;
       },
-      set: function(value){ this.fillSnackbar({ snackbar: value, color: "", text: "" })}
+      set: function(value) {
+        this.fillSnackbar({ snackbar: value, color: "", text: "" });
+      }
     },
 
     //* Jika tabel usulan = 5 maka kecilkan tampilan tabel
@@ -244,8 +288,12 @@ export default {
   },
   data() {
     return {
+      deleteId: -1,
+      deleteIdTable: -1,
+      dialogDelete: false,
       index: null,
       editOverlay: false,
+      editNonFisikOverlay: false,
       show: false,
       overlayTable: true,
       sheetHeightClass: {
@@ -256,59 +304,89 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["fillSnackbar"]),
+    ...mapMutations(["fillSnackbar", "toggleLoadingTable"]),
     ...mapActions(["nextPage", "prevPage", "updateStatus", "loadInitData"]),
     ...mapActions({
       getTable: "getTableUsulan",
       updateTable: "updateTableUsulan"
     }),
+    deleteUsulanConfirmed() {
+      var ini = this;
+      this.loading = true;
+      this.dialogDelete = false;
+      axios
+        .post("/usul/hapus", {
+          id: ini.deleteId
+        })
+        .then(function(response) {
+          ini.loading = false;
+          ini.fillSnackbar({ snackbar: true, color: "success", text: "Usulan berhasil di hapus!" });
+          ini.tableUsulan.splice(ini.deleteIdTable, 1);
+        })
+        .catch(function(error) {
+          ini.loading = false;
+          ini.fillSnackbar({ snackbar: true, color: "success", text: "Usulan berhasil di hapus!" });
+        });
+    },
+    deleteUsulan(index) {
+      this.dialogDelete = true;
+      var ini = this;
+      ini.deleteIdTable = index;
+      ini.deleteId = ini.tableUsulan[index]["id"];
+    },
     edit(index) {
-      this.editOverlay = true;
-      this.index = index;
+      if (this.tableUsulan[index].jenis == "Fisik") {
+        this.editOverlay = true;
+        this.index = index;
+      } else {
+        this.editNonFisikOverlay = true;
+        this.index = index;
+        console.log("non fisik called");
+      }
     },
     toggleStatus(index, status) {
       var ini = this;
       var obj = { index: index, status: status };
-      this.updateStatus(obj).then(function(response) {
-        const capitalized = status.charAt(0).toUpperCase() + status.slice(1);
-        const noti = ini.$vs
-          .notification({
+      this.updateStatus(obj)
+        .then(function(response) {
+          const capitalized = status.charAt(0).toUpperCase() + status.slice(1);
+          const noti = ini.$vs.notification({
             square: true,
             color: "success",
             position: "top-right",
             title: `${capitalized} sukses`,
             text: `${capitalized}  berhasil diperbarui!`
-          })
-        console.log("reached");
-      }).catch(error => {
-            const capitalized =
-              status.charAt(0).toUpperCase() + status.slice(1);
-            const noti = ini.$vs.notification({
-              square: true,
-              color: "danger",
-              position: "top-right",
-              title: `${capitalized} gagal`,
-              text: `Terjadi kesalahan, coba refresh halaman`
-            });
           });
+          console.log("reached");
+        })
+        .catch(error => {
+          const capitalized = status.charAt(0).toUpperCase() + status.slice(1);
+          const noti = ini.$vs.notification({
+            square: true,
+            color: "danger",
+            position: "top-right",
+            title: `${capitalized} gagal`,
+            text: `Terjadi kesalahan, coba refresh halaman`
+          });
+        });
     },
     next() {
+      this.toggleLoadingTable();
       this.overlayTable = true;
       var ini = this;
       this.nextPage().then(function(response) {
-        ini.overlayTable = false;
+        ini.toggleLoadingTable();
       });
     },
     prev() {
-      this.overlayTable = true;
+      this.toggleLoadingTable();
       var ini = this;
       this.prevPage().then(function(response) {
-        ini.overlayTable = false;
+        ini.toggleLoadingTable();
       });
     },
     barisTiapHalaman(jumlah) {
       var ini = this;
-      this.overlayTable = true;
       var itemPerPage;
       if (jumlah == "5") {
         itemPerPage = 5;
@@ -320,7 +398,6 @@ export default {
       console.log(itemPerPage);
 
       this.getTable(itemPerPage).then(function(response) {
-        ini.overlayTable = false;
         console.log(ini.sheetHeightClass);
       });
     },
@@ -452,11 +529,11 @@ export default {
 .tidak-tidak-tidak:hover {
   transition: 0.5s ease;
   height: 100px;
-  background: rgb(255, 254, 254);
+  background: rgb(240, 240, 240);
   background: linear-gradient(
     90deg,
-    rgba(255, 254, 254, 1) 0%,
-    rgba(255, 253, 253, 1) 53%,
+    rgba(240, 240, 240, 1) 0%,
+    rgba(240, 240, 240, 1) 53%,
     /* rgba(255, 202, 185, 1) 71%, */ rgba(255, 202, 185, 1) 79%,
     /* rgba(255, 202, 185, 1) 87%, */ rgba(255, 255, 255, 1) 100%
   );
@@ -511,8 +588,8 @@ export default {
   background: rgb(255, 254, 254);
   background: linear-gradient(
     90deg,
-    rgba(255, 254, 254, 1) 0%,
-    rgba(255, 253, 253, 1) 53%,
+    rgba(240, 240, 240, 1) 0%,
+    rgba(240, 240, 240, 1) 53%,
     /* rgba(255, 202, 185, 1) 71%, 
       rgba(255, 202, 185, 1)
     */

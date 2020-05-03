@@ -12,6 +12,7 @@ export default new Vuex.Store({
         snackbar: false,
         snackbarText: "",
         snackbarColor: "",
+        isTableLoading: false,
     },
     getters: {
         rawData: state => state.rawData,
@@ -37,6 +38,9 @@ export default new Vuex.Store({
             state.snackbarColor = dataObj.color;
             state.snackbarText = dataObj.text;
             state.snackbar = dataObj.snackbar;
+        },
+        toggleLoadingTable(state){
+            state.isTableLoading = !state.isTableLoading; 
         }
     },
     actions: {
@@ -51,15 +55,16 @@ export default new Vuex.Store({
                 // ini.pod_items = response.data['pod'];
                 // ini.usulan_items = response.data['itemUsulan'];
                 console.log("init data loaded!")
-                console.log("woiiiii ini datanya items:");
             }).catch(function (error) {
                 console.log(error);
                 console.log("retrying to load init data!");
                 dispatch('loadInitData');
             });
         },
-        getTableUsulan({commit,dispatch},barisPerHalaman) {
+        getTableUsulan({commit,dispatch,state},barisPerHalaman) {
             return new Promise((resolve, reject) => {
+                commit('toggleLoadingTable');
+                console.log("loading state " +state.isTableLoading);
                 var ini = this;
                 Axios({
                     method: "get",
@@ -72,11 +77,13 @@ export default new Vuex.Store({
                         console.log(response.data);
                         commit('fillRawData', response.data );
                         resolve(response.data);
+                        commit('toggleLoadingTable');
+                        console.log("loading state "+state.isTableLoading);
                     })
                     .catch(function(error) {
-                        console.log(error);
+                        console.log("retrying load table");
                         dispatch('getTableUsulan',15);
-                        reject(error);
+                        // reject(error);
                     });
             });
         },
@@ -87,7 +94,6 @@ export default new Vuex.Store({
         },
         updateTableUsulan({commit, state},dataObj) {
             return new Promise((resolve, reject) => {
-                console.log("woi");
                 var ini = this;
                 axios.post('/usul/update', {
                     id:dataObj.id,

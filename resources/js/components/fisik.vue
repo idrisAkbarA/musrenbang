@@ -122,7 +122,7 @@
                   @vdropzone-queue-complete="photosUploaded"
                   @vdropzone-complete="afterComplete"
                   ref="myVueDropzone"
-                  id="dropzone"
+                  id="s6"
                   :options="dropzoneOptions"
                 ></vue-dropzone>
               </v-col>
@@ -133,7 +133,7 @@
                   @vdropzone-queue-complete="filesUploaded"
                   @vdropzone-complete="afterCompleteFiles"
                   ref="myVueDropzoneFiles"
-                  id="dropzoneFile"
+                  id="s7"
                   :options="dropzoneOptionsFiles"
                 ></vue-dropzone>
               </v-col>
@@ -264,6 +264,18 @@
                   outlined
                 ></v-text-field>
               </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="12"
+              >
+                <GmapMap 
+                :center="{lat:10,lng:10}"
+                :zoom="7"
+                style="width:100%;height:360px;"
+                >
+                </GmapMap>
+              </v-col>
             </v-row>
           </v-container>
           <v-overlay :value="overlay">
@@ -301,8 +313,19 @@ export default {
     event: "editClicked"
   },
   computed: {
-    ...mapState(["snackbar", "snackbarColor", "snackbarText"]),
-    ...mapGetters(["rawData", "kelurahan_items", "pod_items", "usulan_items"]),
+    ...mapState([
+      "snackbar",
+      "snackbarColor",
+      "snackbarText",
+      "isTableLoading"
+    ]),
+    ...mapGetters([
+      "rawData",
+      "kelurahan_items",
+      "pod_items",
+      "usulan_items",
+      "barisPerHalaman"
+    ]),
     dialogFisik: {
       get: function() {
         console.log(this.value);
@@ -380,7 +403,10 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["fillSnackbar"]),
+    ...mapActions({
+      getTable: "getTableUsulan"
+    }),
+    ...mapMutations(["fillSnackbar", "toggleLoadingTable"]),
     calcProgressValue(value, index) {
       if (value == null || value == "") {
         if (this.checkProgress[index] == 0) {
@@ -472,6 +498,7 @@ export default {
       var ini = this;
       axios
         .post("/usul", {
+          jenis: "Fisik",
           usulan: ini.usulan,
           kelurahan: ini.kelurahan,
           pod: ini.pod,
@@ -494,6 +521,7 @@ export default {
         })
         .then(function(response) {
           // ini.tableUsulan = response.data.data;
+          ini.getTable(ini.barisPerHalaman);
           ini.$refs.myVueDropzone.removeAllFiles();
           ini.$refs.myVueDropzoneFiles.removeAllFiles();
           ini.fillSnackbar({

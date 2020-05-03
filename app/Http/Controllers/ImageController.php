@@ -40,6 +40,13 @@ class ImageController extends Controller
          
     	return response()->json(['success'=>'You have successfully upload file.']);
     }
+    public function delete($filename)
+    {   
+        foreach ($filename as $key => $value) {
+            Storage::delete('images/'. $value);
+        }
+    	return response()->json(['success'=>'file deleted successfully!.']);
+    }
 
     /**
      * Display the specified resource.

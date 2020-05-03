@@ -33,7 +33,7 @@
           style="width:100vw; height:100vh;"
           class="editGrid"
         >
-          <div style="position: fixed; top:2em; right:2em">
+          <div style="position: fixed; top:2em; right:6em">
             <v-btn
               text
               @click="batal()"
@@ -53,13 +53,6 @@
                 class="overflow-y-auto"
               >
 
-                <v-sheet
-                  style="position: sticky;"
-                  class="title ml-4 mt-2"
-                >
-                  Rincian Usulan
-                </v-sheet>
-
                 <v-container fluid>
 
                   <v-row no-gutters>
@@ -69,8 +62,17 @@
                       sm="6"
                       md="12"
                     >
+                      <h3 class="mt-2 mb-2">
+                        Rincian Usulan
+                      </h3>
+
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="12"
+                    >
                       <v-combobox
-                        dense
                         prepend-inner-icon="account_balance"
                         v-model="tableUsulanTemp.pod"
                         outlined
@@ -81,39 +83,26 @@
                     </v-col>
 
                     <v-col cols="12">
-                      <v-combobox
-                        dense
-                        prepend-inner-icon="announcement"
-                        outlined
-                        v-model="tableUsulanTemp.usulan"
-                        :items="usulan_items"
+                      <v-text-field
                         label="Usulan"
-                      ></v-combobox>
-                    </v-col>
-                    <v-col cols="6">
-
-                      <v-text-field
-                        dense
-                        label="Volume"
-                        class="mr-1"
-                        v-model="tableUsulanTemp.volume"
-                        prepend-inner-icon="mdi-scale-balance"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        dense
-                        label="Satuan"
-                        class="ml-1"
-                        v-model="tableUsulanTemp.satuan"
-                        prepend-inner-icon="linear_scale"
+                        v-model="tableUsulanTemp.usulan"
+                        prepend-inner-icon="announcement"
                         outlined
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
+                      <v-autocomplete
+                        class="ml-1"
+                        v-model="tableUsulanTemp.kelurahan"
+                        prepend-inner-icon="map"
+                        outlined
+                        :items="kelurahan_items"
+                        label="Kelurahan"
+                      >
+                      </v-autocomplete>
+                    </v-col>
+                    <v-col cols="12">
                       <v-textarea
-                        dense
                         prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
                         v-model="tableUsulanTemp.output"
                         outlined
@@ -126,7 +115,6 @@
                     </v-col>
                     <v-col cols="12">
                       <v-textarea
-                        dense
                         prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
                         v-model="tableUsulanTemp.alasan_usulan"
                         outlined
@@ -138,7 +126,6 @@
                     </v-col>
                     <v-col cols="12">
                       <v-textarea
-                        dense
                         prepend-inner-icon="mdi-checkbox-multiple-marked-circle-outline"
                         v-model="tableUsulanTemp.informasi_tambahan"
                         outlined
@@ -148,7 +135,46 @@
                         row-height="30"
                       ></v-textarea>
                     </v-col>
-
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <v-text-field
+                        class="mr-1"
+                        label="Nama Pengusul"
+                        v-model="tableUsulanTemp.nama_pengusul"
+                        prepend-inner-icon="person"
+                        outlined
+                      >
+                      </v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="6"
+                    >
+                      <v-text-field
+                        class="ml-1"
+                        label="No. HP Pengusul"
+                        v-model="tableUsulanTemp.hp_pengusul"
+                        prepend-inner-icon="phone"
+                        outlined
+                      >
+                      </v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="12"
+                    >
+                      <v-text-field
+                        label="Alamat Pengusul"
+                        v-model="tableUsulanTemp.alamat_pengusul"
+                        prepend-inner-icon="place"
+                        outlined
+                      ></v-text-field>
+                    </v-col>
                     <v-col cols="12">
                       <v-btn
                         @click="downloadFilePendukung(1)"
@@ -175,164 +201,6 @@
                 </v-container>
               </v-card>
 
-            </template>
-          </v-hover>
-          <v-hover>
-            <template v-slot="{ hover }">
-              <v-card
-                @click="caroussel(0)"
-                width="100%"
-                ripple
-                light
-                :elevation="hover ? 20 : 6"
-                style="grid-area: gambar1"
-              >
-                <v-img
-                  min-height="100%"
-                  min-width="100%"
-                  max-height="100%"
-                  :src="foto1()"
-                ></v-img>
-              </v-card>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template v-slot="{ hover }">
-              <v-card
-                @click="caroussel(1)"
-                width="100%"
-                ripple
-                light
-                :elevation="hover ? 20 : 6"
-                style="grid-area: gambar2"
-              >
-                <v-img
-                  min-height="100%"
-                  min-width="100%"
-                  max-height="100%"
-                  :src="foto2()"
-                ></v-img>
-              </v-card>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template v-slot="{ hover }">
-              <v-card
-                light
-                :elevation="hover ? 20 : 6"
-                class="overflow-y-hidden"
-                style="grid-area: lokasi"
-              >
-                <v-sheet class="title ml-4 mt-2">
-                  Lokasi
-                </v-sheet>
-                <v-container>
-                  <v-row no-gutters>
-                    <v-col cols="12">
-                      <v-text-field
-                        dense
-                        label="Jalan/alamat"
-                        v-model="tableUsulanTemp.alamat"
-                        prepend-inner-icon="place"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-text-field
-                        dense
-                        class="mr-1"
-                        label="RT"
-                        v-model="tableUsulanTemp.rt"
-                        outlined
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-text-field
-                        dense
-                        label="RW"
-                        v-model="tableUsulanTemp.rw"
-                        outlined
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-autocomplete
-                        dense
-                        class="ml-1"
-                        v-model="tableUsulanTemp.kelurahan"
-                        prepend-inner-icon="map"
-                        outlined
-                        :items="kelurahan_items"
-                        label="Kelurahan"
-                      >
-                      </v-autocomplete>
-                    </v-col>
-                  </v-row>
-                </v-container>
-
-              </v-card>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template v-slot="{ hover }">
-              <v-card
-                class="overflow-y-hidden"
-                light
-                :elevation="hover ? 20 : 6"
-                style="grid-area: pengusul"
-              >
-                <v-sheet class="title ml-4 mt-2">
-                  Rincian Pengusul
-                </v-sheet>
-                <v-container>
-                  <v-row no-gutters>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="6"
-                    >
-                      <v-text-field
-                        dense
-                        class="mr-1"
-                        label="Nama Pengusul"
-                        v-model="tableUsulanTemp.nama_pengusul"
-                        prepend-inner-icon="person"
-                        outlined
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="6"
-                    >
-                      <v-text-field
-                        dense
-                        class="ml-1"
-                        label="No. HP Pengusul"
-                        v-model="tableUsulanTemp.hp_pengusul"
-                        prepend-inner-icon="phone"
-                        outlined
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="12"
-                    >
-                      <v-text-field
-                        dense
-                        label="Alamat Pengusul"
-                        v-model="tableUsulanTemp.alamat_pengusul"
-                        prepend-inner-icon="place"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
             </template>
           </v-hover>
         </div>
@@ -367,22 +235,24 @@ export default {
     prop: "value",
     event: "editClicked"
   },
-  watch:{
-    tableUsulan:((value)=>{
+  watch: {
+    tableUsulan: value => {
       console.log(value);
-    }),
-    value:function(value){
+    },
+    value: function(value) {
       console.log(value);
-      if(value){
-        this.tableUsulanTemp = JSON.parse(JSON.stringify(this.tableUsulan[this.$props.index]));
+      if (value) {
+        this.tableUsulanTemp = JSON.parse(
+          JSON.stringify(this.tableUsulan[this.$props.index])
+        );
         this.temp = this.tableUsulan[this.$props.index];
-      }else{
-        console.log("called")
+      } else {
+        console.log("called");
         // this.tableUsulanTemp = this.temp;
         this.tableUsulanTemp = {};
-        console.log(this.tableUsulanTemp)
-        console.log(this.tableUsulan[this.$props.index])
-        console.log(this.$store.state.rawData.data[this.$props.index])
+        console.log(this.tableUsulanTemp);
+        console.log(this.tableUsulan[this.$props.index]);
+        console.log(this.$store.state.rawData.data[this.$props.index]);
         // this.tableUsulan = this.temp;
       }
     }
@@ -408,8 +278,8 @@ export default {
   },
   data() {
     return {
-      temp:null,
-      tableUsulanTemp:{},
+      temp: null,
+      tableUsulanTemp: {},
       snackbar: false,
       snackbarText: "",
       snackbarColor: "",
@@ -424,7 +294,7 @@ export default {
   // },
   methods: {
     ...mapActions(["updateTableUsulan"]),
-    batal(){
+    batal() {
       this.editOverlay = false;
     },
     update() {
@@ -475,18 +345,20 @@ export default {
 };
 </script>
 <style  scoped>
-
 .editGrid {
   height: 100vh;
-  padding: 5em;
+  padding-top: 5em;
+  padding-bottom: 5em;
+  padding-left: 10em;
+  padding-right: 10em;
   display: grid;
   grid-gap: 1.5em;
   grid-template-columns: 55% 22.5% 22.5%;
   grid-template-rows: 33.33% 33.33% 33.33%;
   grid-template-areas:
-    "rincian gambar1 gambar2"
-    "rincian lokasi lokasi"
-    "rincian pengusul pengusul";
+    "rincian rincian rincian"
+    "rincian rincian rincian"
+    "rincian rincian rincian";
 }
 ::-webkit-scrollbar {
   width: 7px;
@@ -518,5 +390,6 @@ export default {
 
 ::-webkit-scrollbar-thumb:hover {
   transition: 1s ease;
-  background: #555;}
+  background: #555;
+}
 </style>

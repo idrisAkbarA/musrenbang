@@ -64,7 +64,7 @@ class initUsulan extends Command
             $jenis = ['fisik','nonfisik'];
             $selectedJenis = $jenis[rand(0,1)];
             if($selectedJenis == 'fisik'){
-                $usulan->jenis = "fisik";
+                $usulan->jenis = "Fisik";
                 $usulan->usulan = ItemUsulan::find(rand(1,38))->nama;
                 $usulan->volume = rand(10,100) . ' x  ' . rand(10,100);
                 $usulan->satuan = 'm';
@@ -76,7 +76,7 @@ class initUsulan extends Command
                 $usulan->file1 = "1584957622588-fc.pdf";
                 $usulan->file2 = "1584957622593-flowchart.pdf";
             }else{
-                $usulan->jenis = "nonfisik";
+                $usulan->jenis = "Non Fisik";
                 $usulan->usulan = $faker->sentence;
                 $usulan->volume = "-";
                 $usulan->satuan = '-';
