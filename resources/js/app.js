@@ -181,10 +181,9 @@ const app = new Vue({
     }),
     beforeMount(){
         var ini = this;
-        this.loadTableWithFilter(15);
-        // this.loadDataTable();
-        this.loadInitData();
-        console.log(window.innerWidth);
+        // this.loadTableWithFilter(15);
+        // // this.loadDataTable();
+        // this.loadInitData();
         var that= this;
         this.transitionEndFunction(function() {
             that.fad=!that.fad;  
@@ -279,45 +278,45 @@ const app = new Vue({
             console.log(tahunList);
             return tahunList;
         },
-        update(){
-            console.log("woi");
-            var ini = this;
-            axios.post('/usul/update', {
-                id:ini.tableUsulanTemp.id,
-                usulan:ini.tableUsulanTemp.usulan,
-                kelurahan:ini.tableUsulanTemp.kelurahan,
-                pod: ini.tableUsulanTemp.pod,
-                volume: ini.tableUsulanTemp.volume,
-                satuan: ini.tableUsulanTemp.satuan,
-                alamat: ini.tableUsulanTemp.alamat,
-                alasan_usulan: ini.tableUsulanTemp.alasan_usulan,
-                informasi_tambahan: ini.tableUsulanTemp.informasi_tambahan,
-                output: ini.tableUsulanTemp.output,
-                rt: ini.tableUsulanTemp.rt,
-                rw: ini.tableUsulanTemp.rw,
-                nama_pengusul: ini.tableUsulanTemp.nama_pengusul,
-                hp_pengusul: ini.tableUsulanTemp.hp_pengusul,
-                alamat_pengusul: ini.tableUsulanTemp.alamat_pengusul,
-                itemPerPage: ini.rawData.per_page
-              })
-              .then(function (response) {
-                ini.editOverlay = false;
-                ini.tableUsulan = response.data.data;
-                ini.overlay = false;
-                ini.snackbarText = "Usulan berhasil diperbarui!"
-                ini.snackbarColor = "success"
-                ini.snackbar = true;
-                console.log(response.data.data);
-              })
-              .catch(function (error) {
-                console.log(error);
-                ini.editOverlay = false;
-                ini.snackbarText = "Terjadi kesalahan coba lagi!"
-                ini.snackbarColor = "error"
-                ini.snackbar = true;
-              });
-              this.dialogFisik = false;
-        },
+        // update(){
+        //     console.log("woi");
+        //     var ini = this;
+        //     axios.post('/usul/update', {
+        //         id:ini.tableUsulanTemp.id,
+        //         usulan:ini.tableUsulanTemp.usulan,
+        //         kelurahan:ini.tableUsulanTemp.kelurahan,
+        //         pod: ini.tableUsulanTemp.pod,
+        //         volume: ini.tableUsulanTemp.volume,
+        //         satuan: ini.tableUsulanTemp.satuan,
+        //         alamat: ini.tableUsulanTemp.alamat,
+        //         alasan_usulan: ini.tableUsulanTemp.alasan_usulan,
+        //         informasi_tambahan: ini.tableUsulanTemp.informasi_tambahan,
+        //         output: ini.tableUsulanTemp.output,
+        //         rt: ini.tableUsulanTemp.rt,
+        //         rw: ini.tableUsulanTemp.rw,
+        //         nama_pengusul: ini.tableUsulanTemp.nama_pengusul,
+        //         hp_pengusul: ini.tableUsulanTemp.hp_pengusul,
+        //         alamat_pengusul: ini.tableUsulanTemp.alamat_pengusul,
+        //         itemPerPage: ini.rawData.per_page
+        //       })
+        //       .then(function (response) {
+        //         ini.editOverlay = false;
+        //         ini.tableUsulan = response.data.data;
+        //         ini.overlay = false;
+        //         ini.snackbarText = "Usulan berhasil diperbarui!"
+        //         ini.snackbarColor = "success"
+        //         ini.snackbar = true;
+        //         console.log(response.data.data);
+        //       })
+        //       .catch(function (error) {
+        //         console.log(error);
+        //         ini.editOverlay = false;
+        //         ini.snackbarText = "Terjadi kesalahan coba lagi!"
+        //         ini.snackbarColor = "error"
+        //         ini.snackbar = true;
+        //       });
+        //       this.dialogFisik = false;
+        // },
         caroussel(index){
             this.carousselList = [];
             if(index == 0){
@@ -435,31 +434,31 @@ const app = new Vue({
             
             });
         },
-        loadTableWithFilter(itemPerPage){
-            var ini = this;
-            ini.overlayTable =true;
-            Axios({
-                method:'get',
-                url: '/usulFilter',params:{
-                    itemPerPage: itemPerPage,
-                }
-            }).then(function(response){
-                console.log(response.data);
-                ini.rawData = response.data;
-                ini.tableUsulan = ini.rawData.data;
-                ini.barisPerHalaman = ini.rawData.per_page;
-                console.log(ini.rawData);
-                console.log(ini.tableUsulan);
-                console.log("table data loaded!")
-                ini.overlayTable =false;
-            })
-            .catch(function (error) {
-                console.log(error);
-                console.log("retrying to load table data!");
-                ini.loadTableWithFilter(itemPerPage);
-            });
+        // loadTableWithFilter(itemPerPage){
+        //     var ini = this;
+        //     ini.overlayTable =true;
+        //     Axios({
+        //         method:'get',
+        //         url: '/usulFilter',params:{
+        //             itemPerPage: itemPerPage,
+        //         }
+        //     }).then(function(response){
+        //         console.log(response.data);
+        //         ini.rawData = response.data;
+        //         ini.tableUsulan = ini.rawData.data;
+        //         ini.barisPerHalaman = ini.rawData.per_page;
+        //         console.log(ini.rawData);
+        //         console.log(ini.tableUsulan);
+        //         console.log("table data loaded!")
+        //         ini.overlayTable =false;
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //         console.log("retrying to load table data!");
+        //         ini.loadTableWithFilter(itemPerPage);
+        //     });
            
-        },
+        // },
         barisTiapHalaman(jumlah){
             var itemPerPage;
             if(jumlah == '5'){
@@ -532,42 +531,42 @@ const app = new Vue({
             // });
            
         },
-        loadDataTable(){
-            var ini = this;
-            Axios({
-                method:'get',
-                url: '/usul'
-            }).then(function(response){
-                console.log(response.data);
-                ini.rawData = response.data;
-                ini.tableUsulan = ini.rawData.data;
-                console.log(ini.rawData);
-                console.log(ini.tableUsulan);
-                console.log("table data loaded!")
-            })
-            .catch(function (error) {
-                console.log(error);
-                console.log("retrying to load table data!");
-                ini.loadDataTable();
-            });
+        // loadDataTable(){
+        //     var ini = this;
+        //     Axios({
+        //         method:'get',
+        //         url: '/usul'
+        //     }).then(function(response){
+        //         console.log(response.data);
+        //         ini.rawData = response.data;
+        //         ini.tableUsulan = ini.rawData.data;
+        //         console.log(ini.rawData);
+        //         console.log(ini.tableUsulan);
+        //         console.log("table data loaded!")
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //         console.log("retrying to load table data!");
+        //         ini.loadDataTable();
+        //     });
            
-        },
-        loadInitData(){
-            var ini = this;
-            Axios({
-                method:'get',
-                url: '/itemPilihan'
-            }).then(function(response){
-                ini.kelurahan_items = response.data['kelurahan'];
-                ini.pod_items = response.data['pod'];
-                ini.usulan_items = response.data['itemUsulan'];
-                console.log("init data loaded!")
-            }).catch(function (error) {
-                console.log(error);
-                console.log("retrying to load init data!");
-                ini.loadInitData();
-            });
-        },
+        // },
+        // loadInitData(){
+        //     var ini = this;
+        //     Axios({
+        //         method:'get',
+        //         url: '/itemPilihan'
+        //     }).then(function(response){
+        //         ini.kelurahan_items = response.data['kelurahan'];
+        //         ini.pod_items = response.data['pod'];
+        //         ini.usulan_items = response.data['itemUsulan'];
+        //         console.log("init data loaded!")
+        //     }).catch(function (error) {
+        //         console.log(error);
+        //         console.log("retrying to load init data!");
+        //         ini.loadInitData();
+        //     });
+        // },
         loader_verif(index){
             return this.tableUsulan[index].loading_verifikasi;
         },

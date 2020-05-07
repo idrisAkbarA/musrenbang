@@ -71,10 +71,18 @@ class initUsulan extends Command
                 $usulan->alamat = $faker->streetAddress;
                 $usulan->rt = rand(1,10);
                 $usulan->rw = rand(1,5);
-                $usulan->foto1 = "1584957616155-IMG_20191010_122526_1.jpg";
-                $usulan->foto2 = "1584957616146-21 bg.png";
-                $usulan->file1 = "1584957622588-fc.pdf";
-                $usulan->file2 = "1584957622593-flowchart.pdf";
+                $foto1Name = date("Ymdhis")."-a".$i.".jpg";
+                $foto2Name = date("Ymdhis")."-b".$i.".jpg";
+                $file1Name = date("Ymdhis")."-a".$i.".pdf";
+                $file2Name = date("Ymdhis")."-b".$i.".pdf";
+                copy(public_path('images').'\default\a.jpg',public_path('images').'\\'.$foto1Name);
+                copy(public_path('images').'\default\b.jpg',public_path('images').'\\'.$foto2Name);
+                copy(public_path('files').'\default\a.pdf',public_path('files').'\\'.$file1Name);
+                copy(public_path('files').'\default\b.pdf',public_path('files').'\\'.$file2Name);
+                $usulan->foto1 = $foto1Name;
+                $usulan->foto2 = $foto2Name;
+                $usulan->file1 = $file1Name;
+                $usulan->file2 = $file2Name;
             }else{
                 $usulan->jenis = "Non Fisik";
                 $usulan->usulan = $faker->sentence;

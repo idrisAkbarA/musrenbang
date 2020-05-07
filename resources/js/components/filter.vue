@@ -69,22 +69,24 @@
             </v-autocomplete>
           </v-col>
           <v-col cols="4">
-              <!-- :items="usulan_items" -->
+            <!-- :items="usulan_items" -->
             <v-combobox
               dense
               prepend-inner-icon="announcement"
               outlined
               v-model="filter.usulan"
+              :items="usulan_items"
               label="Usulan"
             ></v-combobox>
           </v-col>
           <v-col cols="6">
-              <!-- :items="pod_items" -->
+            <!-- :items="pod_items" -->
             <v-combobox
               dense
               prepend-inner-icon="account_balance"
               v-model="filter.pod"
               outlined
+              :items="pod_items"
               label="Organisasi Perangkat Daerah"
             >
             </v-combobox>
@@ -100,12 +102,13 @@
             </v-text-field>
           </v-col>
           <v-col cols="2">
-              <!-- :items="kelurahan_items" -->
+            <!-- :items="kelurahan_items" -->
             <v-autocomplete
               dense
               v-model="filter.kelurahan"
               prepend-inner-icon="map"
               outlined
+              :items="kelurahan_items"
               label="kelurahan"
             >
             </v-autocomplete>
@@ -150,10 +153,18 @@
 
 </template>
 ]<script>
+import { mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapGetters([      "kelurahan_items",
+      "pod_items",
+      "usulan_items",
+      "barisPerHalaman"])
+  },
   data() {
     return {
       filter: {
+        jenis: null,
         tahun: null,
         usulan: null,
         pod: null,
@@ -165,6 +176,40 @@ export default {
     };
   },
   methods: {
+    filterTest() {
+      var ini = this;
+      ini.overlayTable = true;
+      console.log(ini.rawData.per_page);
+      Axios({
+        method: "get",
+        url: "/usul/testFilter",
+        params: {
+          filter: ini.filter,
+          perPage: ini.rawData.per_page
+        }
+      })
+        .then(function(response) {
+          ini.rawData = response.data;
+          ini.tableUsulan = ini.rawData.data;
+          console.log(response.data);
+          ini.overlayTable = false;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    filterReset() {
+      this.filter = {
+        jenis: null,
+        tahun: null,
+        usulan: null,
+        pod: null,
+        alamat: null,
+        verifikasi: null,
+        validasi: null,
+        prioritas: null
+      };
+    },
     tahunItems() {
       var awalTahun = 2020;
       var date = new Date();

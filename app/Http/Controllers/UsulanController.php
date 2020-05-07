@@ -186,6 +186,8 @@ class UsulanController extends Controller
             $usul->output = $request['output'];
             $usul->rt = $request['rt'];
             $usul->rw = $request['rw'];
+            $usul->foto1 = $request['foto1'];
+            $usul->foto2 = $request['foto2'];
             $usul->alamat_pengusul = $request['alamat_pengusul'];
             $usul->hp_pengusul = $request['hp_pengusul'];
             $usul->nama_pengusul = $request['nama_pengusul'];

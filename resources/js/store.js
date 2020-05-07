@@ -56,7 +56,7 @@ export default new Vuex.Store({
                 // ini.usulan_items = response.data['itemUsulan'];
                 console.log("init data loaded!")
             }).catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 console.log("retrying to load init data!");
                 dispatch('loadInitData');
             });
@@ -74,7 +74,7 @@ export default new Vuex.Store({
                     }
                 })
                     .then(function(response) {
-                        console.log(response.data);
+                        // console.log(response.data);
                         commit('fillRawData', response.data );
                         resolve(response.data);
                         commit('toggleLoadingTable');
@@ -94,7 +94,10 @@ export default new Vuex.Store({
         },
         updateTableUsulan({commit, state},dataObj) {
             return new Promise((resolve, reject) => {
-                var ini = this;
+                // if(dataObj.foto1){
+                //     console.log("foto exist");
+                // }
+                // console.log(dataObj);
                 axios.post('/usul/update', {
                     id:dataObj.id,
                     usulan:dataObj.usulan,
@@ -108,6 +111,8 @@ export default new Vuex.Store({
                     output: dataObj.output,
                     rt: dataObj.rt,
                     rw: dataObj.rw,
+                    foto1:dataObj.foto1,
+                    foto2:dataObj.foto2,
                     nama_pengusul: dataObj.nama_pengusul,
                     hp_pengusul: dataObj.hp_pengusul,
                     alamat_pengusul: dataObj.alamat_pengusul,
@@ -116,10 +121,10 @@ export default new Vuex.Store({
                   .then(function (response) {
                     commit('fillRawData', response.data );
                     resolve(response.data);
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
                   })
                   .catch(function (error) {
-                    console.log(error);
+                    // console.log(error);
                     reject(error);
                   });
             });
@@ -131,7 +136,7 @@ export default new Vuex.Store({
                     method:'get',
                     url: state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page
                 }).then(function(response){
-                    console.log(response.data);
+                    // console.log(response.data);
                     commit('fillRawData', response.data );
                     console.log("table data loaded!")
                     // ini.overlayTable =false;
@@ -149,7 +154,7 @@ export default new Vuex.Store({
                     method:'get',
                     url: state.rawData.prev_page_url+"&itemPerPage="+state.rawData.per_page
                 }).then(function(response){
-                    console.log(response.data);
+                    // console.log(response.data);
                     commit('fillRawData', response.data );
                     console.log("table data loaded!")
                     // ini.overlayTable =false;

@@ -40,7 +40,7 @@
             >batal</v-btn>
             <v-btn
               color="primary"
-              @click="update()"
+              @click="send()"
             >Simpan</v-btn>
           </div>
           <v-hover>
@@ -61,6 +61,22 @@
                 </v-sheet>
 
                 <v-container fluid>
+                  <input
+                    type="file"
+                    ref="foto1Temp"
+                    accept="image/*"
+                    @change="setFoto(1)"
+                    style="display:none"
+                    label="temp"
+                  >
+                  <input
+                    type="file"
+                    ref="foto2Temp"
+                    accept="image/*"
+                    @change="setFoto(2)"
+                    style="display:none"
+                    label="temp"
+                  >
 
                   <v-row no-gutters>
 
@@ -177,17 +193,26 @@
 
             </template>
           </v-hover>
+
           <v-hover>
             <template v-slot="{ hover }">
               <v-card
-                @click="caroussel(0)"
+                color="primary"
                 width="100%"
-                ripple
                 light
                 :elevation="hover ? 20 : 6"
                 style="grid-area: gambar1"
               >
+                <v-btn
+                  block
+                  color="primary"
+                  style="position:absolute; bottom:0; left:0;right:0"
+                  @click="changeFoto1"
+                >Ganti Foto</v-btn>
                 <v-img
+                  v-ripple
+                  @click="caroussel(0)"
+                  :style="hover? 'top:-35px; transition:.3s ease;cursor:pointer;':'top:0;cursor:pointer;transition:1s ease;'"
                   min-height="100%"
                   min-width="100%"
                   max-height="100%"
@@ -199,14 +224,22 @@
           <v-hover>
             <template v-slot="{ hover }">
               <v-card
-                @click="caroussel(1)"
+                color="primary"
                 width="100%"
-                ripple
                 light
                 :elevation="hover ? 20 : 6"
                 style="grid-area: gambar2"
               >
+                <v-btn
+                  @click="changeFoto2"
+                  block
+                  color="primary"
+                  style="position:absolute; bottom:0; left:0;right:0"
+                >Ganti Foto</v-btn>
                 <v-img
+                  v-ripple
+                  :style="hover? 'top:-35px; transition:.3s ease;cursor:pointer;':'top:0;cursor:pointer;transition:1s ease;'"
+                  @click="caroussel(1)"
                   min-height="100%"
                   min-width="100%"
                   max-height="100%"
@@ -353,6 +386,26 @@
         Tutup
       </v-btn>
     </v-snackbar>
+    <v-overlay
+      style="z-index:100;"
+      :value="editSendOverlay"
+    >
+      <div
+        style="width:500px"
+        class="d-flex justify-center"
+      >
+        <v-progress-circular
+          indeterminate
+          size="64"
+        ></v-progress-circular>
+      </div>
+      <div
+        style="width:500px"
+        class="d-flex justify-center"
+      >
+        <p class="title mt-2">{{loadingText}}</p>
+      </div>
+    </v-overlay>
   </div>
 
 </template>
@@ -367,22 +420,21 @@ export default {
     prop: "value",
     event: "editClicked"
   },
-  watch:{
-    tableUsulan:((value)=>{
+  watch: {
+    tableUsulan: value => {
       console.log(value);
-    }),
-    value:function(value){
+    },
+    value: function(value) {
       console.log(value);
-      if(value){
-        this.tableUsulanTemp = JSON.parse(JSON.stringify(this.tableUsulan[this.$props.index]));
+      if (value) {
+        this.tableUsulanTemp = JSON.parse(
+          JSON.stringify(this.tableUsulan[this.$props.index])
+        );
         this.temp = this.tableUsulan[this.$props.index];
-      }else{
-        console.log("called")
+      } else {
+        console.log("called");
         // this.tableUsulanTemp = this.temp;
         this.tableUsulanTemp = {};
-        console.log(this.tableUsulanTemp)
-        console.log(this.tableUsulan[this.$props.index])
-        console.log(this.$store.state.rawData.data[this.$props.index])
         // this.tableUsulan = this.temp;
       }
     }
@@ -393,7 +445,8 @@ export default {
       "rawData",
       "kelurahan_items",
       "pod_items",
-      "usulan_items"
+      "usulan_items",
+      "barisPerHalaman"
     ]),
     editOverlay: {
       get: function() {
@@ -408,8 +461,16 @@ export default {
   },
   data() {
     return {
-      temp:null,
-      tableUsulanTemp:{},
+      loadingText: null,
+      editSendOverlay: false,
+      foto1Temp: null,
+      foto2Temp: null,
+      foto1EditedPath: null,
+      foto2EditedPath: null,
+      foto1TempUrl: null,
+      foto2TempUrl: null,
+      temp: null,
+      tableUsulanTemp: {},
       snackbar: false,
       snackbarText: "",
       snackbarColor: "",
@@ -423,32 +484,262 @@ export default {
   //   this.tableUsulanTemp = this.tableUsulan[this.$props.index];
   // },
   methods: {
-    ...mapActions(["updateTableUsulan"]),
-    batal(){
+    ...mapActions(["updateTableUsulan", "getTableUsulan"]),
+    batal() {
+      this.foto1TempUrl = null;
+      this.foto2TempUrl = null;
       this.editOverlay = false;
     },
+    // async send() {
+    //   let sendFoto1;
+    //   this.editSendOverlay = true;
+    //   this.loadingText = "Mengunggah Foto..";
+    //   var promiseArr = [];
+    //    if(this.foto1TempUrl) {
+    //     await this.storeFoto(this.foto1Temp, 1);
+    //     promiseArr.push(sendFoto1);
+    //   }
+    //   if (this.foto2TempUrl) {
+    //     await this.storeFoto(this.foto2Temp, 2);
+    //     // promiseArr.push(sendFoto2);
+    //   }
+    //   this.update();
+    // },
+    a(){
+      return new Promise((resolve)=>{
+        axios.get("https://jsonplaceholder.typicode.com/todos/1").then(()=>{
+          console.log("sukses");
+          resolve();
+        })
+      })
+    },
+    b(){
+      console.log("b")
+    },
+    async send() {
+      var ini = this;
+      // var a = function(){console.log("a")};
+      // var b = function(){console.log("b")};
+      // var x = [];
+      // x.push(this.a);
+      // x.push(this.b);
+      // await x[0]();
+      // x[1]();
+      // console.log(x);
+  
+      function storeFoto(foto, fotoKe){
+        var formData = new FormData();
+        var filename = new Date().getTime() + "-" + foto.name;
+        formData.append("file", foto, filename);
+        return new Promise((resolve)=>{
+          axios
+          .post("/submitFoto", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          })
+          .then(function() {
+            console.log("SUCCESS!!");
+            if (fotoKe == 1) {
+              ini.foto1EditedPath = filename;
+              console.log(ini.foto1EditedPath);
+              resolve();
+              // ini.tableUsulanTemp.foto1 = ini.foto1EditedPath;
+            } else {
+              ini.foto2EditedPath = filename;
+              console.log(ini.foto1EditedPath);
+              resolve();
+              // ini.tableUsulanTemp.foto2 = ini.foto2EditedPath;
+            }
+          })
+          .catch(function(error) {
+            console.log("FAILURE!! RETRYING!!");
+            console.log(error);
+            storeFoto(foto, fotoKe);
+          });
+        });
+        
+      };
+     
+            var sendFoto1;
+      var sendFoto2;
+      this.editSendOverlay = true;
+      this.loadingText = "Mengunggah Foto..";
+      var promiseArr = [];
+      if (this.foto1TempUrl) {
+        sendFoto1 = storeFoto(this.foto1Temp, 1);
+        promiseArr.push(sendFoto1);
+      }
+      if (this.foto2TempUrl) {
+        sendFoto2 = storeFoto(this.foto2Temp, 2);
+        promiseArr.push(sendFoto2);
+      }
+      if (promiseArr.length < 1) {
+        console.log("nothing to upload");
+        this.update();
+      } else {
+        console.log(promiseArr);
+        Promise.all(promiseArr).then(()=>{
+          ini.loadingText = "Menyimpan perubahan..";
+          ini.update();
+        })
+        // for (let index = 0; index < promiseArr.length; index++) {
+        //   await promiseArr[index]();
+        // }
+        // ini.loadingText = "Menyimpan perubahan..";
+        // ini.update();
+        // axios.all(promiseArr)
+        //   .then(axios.spread(function (acct, perms) {
+        //     console.log("all foto Uploaded!");
+        //     console.log(acct,perms);
+        //     ini.loadingText = "Menyimpan perubahan..";
+        //     ini.update();
+        //   }));
+      }
+    },
+    // send() {
+    //   var sendFoto1;
+    //   var sendFoto2;
+    //   this.editSendOverlay = true;
+    //   this.loadingText = "Mengunggah Foto..";
+    //   var promiseArr = [];
+    //   if (this.foto1TempUrl) {
+    //     sendFoto1 = this.storeFoto(this.foto1Temp, 1);
+    //     promiseArr.push(sendFoto1);
+    //   }
+    //   if (this.foto2TempUrl) {
+    //     sendFoto2 = this.storeFoto(this.foto2Temp, 2);
+    //     promiseArr.push(sendFoto2);
+    //   }
+    //   if (promiseArr.length < 1) {
+    //     console.log("nothing to upload");
+    //     this.update();
+    //   } else {
+    //     Promise.all(promiseArr)
+    //       .then((values) => {
+    //         console.log("all foto Uploaded!");
+    //         console.log(values);
+    //         this.loadingText = "Menyimpan perubahan..";
+    //         this.update();
+    //       })
+    //       .catch(error => {
+    //         console.log(error);
+    //       });
+    //   }
+    // },
+    storeFoto(foto, fotoKe) {
+      var ini = this;
+      var formData = new FormData();
+      var filename = new Date().getTime() + "-" + foto.name;
+      formData.append("file", foto, filename);
+      axios
+        .post("/submitFoto", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(function() {
+          console.log("SUCCESS!!");
+          if (fotoKe == 1) {
+            ini.foto1EditedPath = filename;
+            console.log(ini.foto1EditedPath);
+            // ini.tableUsulanTemp.foto1 = ini.foto1EditedPath;
+          } else {
+            ini.foto2EditedPath = filename;
+            console.log(ini.foto1EditedPath);
+            // ini.tableUsulanTemp.foto2 = ini.foto2EditedPath;
+          }
+        })
+        .catch(function(error) {
+          console.log("FAILURE!! RETRYING!!");
+          console.log(error);
+          ini.storeFoto(foto, fotoKe);
+        });
+    },
+    setFoto(foto) {
+      if (foto == 1) {
+        this.foto1Temp = this.$refs.foto1Temp.files[0];
+        const reader = new FileReader();
+        var ini = this;
+        reader.addEventListener(
+          "load",
+          function() {
+            // convert image file to base64 string
+            ini.foto1TempUrl = reader.result;
+          },
+          false
+        );
+        if (this.foto1Temp) {
+          reader.readAsDataURL(this.foto1Temp);
+        }
+        console.log(this.foto1Temp);
+      } else {
+        this.foto2Temp = this.$refs.foto2Temp.files[0];
+        const reader = new FileReader();
+        var ini = this;
+        reader.addEventListener(
+          "load",
+          function() {
+            // convert image file to base64 string
+            ini.foto2TempUrl = reader.result;
+          },
+          false
+        );
+        if (this.foto2Temp) {
+          reader.readAsDataURL(this.foto2Temp);
+        }
+        console.log(this.foto2Temp);
+      }
+    },
+    changeFoto1() {
+      console.log(this.$refs.foto1Temp.files);
+      this.$refs.foto1Temp.click();
+    },
+    changeFoto2() {
+      console.log(this.$refs.foto2Temp.files);
+      this.$refs.foto2Temp.click();
+    },
     update() {
+      console.log("-----------------------");
+      if (this.foto1EditedPath) {
+        this.tableUsulanTemp.foto1 = this.foto1EditedPath;
+        console.log(this.tableUsulanTemp.foto1);
+      }
+      if (this.foto2EditedPath) {
+        this.tableUsulanTemp.foto2 = this.foto2EditedPath;
+        console.log(this.tableUsulanTemp.foto2);
+      }
+      console.log("-----------------------");
       var ini = this;
       this.updateTableUsulan(ini.tableUsulanTemp)
         .then(() => {
+          ini.getTableUsulan(ini.barisPerHalaman);
           ini.editOverlay = false;
           ini.snackbarText = "Usulan berhasil diperbarui!";
           ini.snackbarColor = "success";
           ini.snackbar = true;
+          ini.editSendOverlay = false;
         })
         .catch(() => {
+          ini.editSendOverlay = false;
           ini.snackbarText = "Terjadi kesalahan coba lagi!";
           ini.snackbarColor = "error";
           ini.snackbar = true;
         });
     },
     foto1() {
-      var a = "images/" + this.tableUsulanTemp.foto1;
-      return a.replace(" ", "%20");
+      if (!this.foto1TempUrl) {
+        var a = "images/" + this.tableUsulanTemp.foto1;
+        return a.replace(" ", "%20");
+      }
+      return this.foto1TempUrl;
     },
     foto2() {
-      var a = "images/" + this.tableUsulanTemp.foto2;
-      return a.replace(" ", "%20");
+      if (!this.foto2TempUrl) {
+        var a = "images/" + this.tableUsulanTemp.foto2;
+        return a.replace(" ", "%20");
+      }
+      return this.foto2TempUrl;
     },
     caroussel(index) {
       this.carousselList = [];
@@ -475,7 +766,6 @@ export default {
 };
 </script>
 <style  scoped>
-
 .editGrid {
   height: 100vh;
   padding: 5em;
@@ -518,5 +808,6 @@ export default {
 
 ::-webkit-scrollbar-thumb:hover {
   transition: 1s ease;
-  background: #555;}
+  background: #555;
+}
 </style>
