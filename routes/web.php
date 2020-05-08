@@ -46,4 +46,17 @@ Route::post('/prioritas','UsulanController@prioritas');
 Route::get('/itemPilihan','UsulanController@itemPilihan');
 //Auth::routes();
 
+Route::get('/exp',function(){
+    $arr =["Usulan"=>"Makan","Pengusul"=>"idris","alamat"=>"swadaya"];
+    $arrFinal = [];
+    foreach ($arr as $key => $value) {
+        $arrTemp = [];
+        array_push($arrTemp,"$key");
+        array_push($arrTemp,"like");
+        array_push($arrTemp,"%$value%");
+        array_push($arrFinal,$arrTemp);
+    }
+    return $arrFinal;
+    return $arr;
+});
 Route::get('/home', 'HomeController@index')->name('home');

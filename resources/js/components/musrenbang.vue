@@ -57,7 +57,7 @@
               <td>{{item.usulan}}</td>
               <td>{{item.jenis}}</td>
               <td>{{item.volume}}</td>
-              <td>Air Hitam</td>
+              <td>{{item.kelurahan}}</td>
               <td>{{item.pod}}</td>
 
               <td>

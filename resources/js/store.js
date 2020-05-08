@@ -13,6 +13,8 @@ export default new Vuex.Store({
         snackbarText: "",
         snackbarColor: "",
         isTableLoading: false,
+        isItemsLoaded: false,
+        filter:null,
     },
     getters: {
         rawData: state => state.rawData,
@@ -41,10 +43,15 @@ export default new Vuex.Store({
         },
         toggleLoadingTable(state){
             state.isTableLoading = !state.isTableLoading; 
+        },
+        fillFilter(state,dataObj){
+            state.filter = dataObj;
+            console.log(state.filter);
         }
     },
     actions: {
         loadInitData({commit,dispatch,state}){
+            state.isItemsLoaded = false;
             var ini = this;
             Axios({
                 method:'get',
@@ -54,6 +61,7 @@ export default new Vuex.Store({
                 // ini.kelurahan_items = response.data['kelurahan'];
                 // ini.pod_items = response.data['pod'];
                 // ini.usulan_items = response.data['itemUsulan'];
+                state.isItemsLoaded = true;
                 console.log("init data loaded!")
             }).catch(function (error) {
                 // console.log(error);
@@ -92,6 +100,26 @@ export default new Vuex.Store({
 
             })
         },
+        getFilter({commit,getters},dataObj) {
+            // console.log(ini.rawData.per_page);
+            commit('toggleLoadingTable');
+            axios({
+              method: "get",
+              url: "/usul/testFilter",
+              params: {
+                filter: dataObj,
+                perPage: getters.barisPerHalaman
+              }
+            })
+              .then(function(response) {
+                  commit('fillRawData',response.data)
+                  commit('toggleLoadingTable');
+              })
+              .catch(function(error) {
+                console.log(error);
+                commit('toggleLoadingTable');
+              });
+          },
         updateTableUsulan({commit, state},dataObj) {
             return new Promise((resolve, reject) => {
                 // if(dataObj.foto1){
@@ -131,10 +159,20 @@ export default new Vuex.Store({
         },
         nextPage({commit,state}){
             return new Promise((resolve,reject)=>{
+                // if(state.filter !=null){
+                //     var url = state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page+"$filter="+JSON.stringify(state.filter);
+                // }else{
+                //     // var url = state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page;
+                // }
+                var url = state.rawData.next_page_url;
                 var ini = this;
                 Axios({
                     method:'get',
-                    url: state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page
+                    url,
+                    params:{
+                        itemPerPage:state.rawData.per_page,
+                        filter:state.filter
+                    }
                 }).then(function(response){
                     // console.log(response.data);
                     commit('fillRawData', response.data );
@@ -150,9 +188,14 @@ export default new Vuex.Store({
         prevPage({commit,state}){
             return new Promise((resolve,reject)=>{
                 var ini = this;
+                var url = state.rawData.prev_page_url;
                 Axios({
                     method:'get',
-                    url: state.rawData.prev_page_url+"&itemPerPage="+state.rawData.per_page
+                                        url,
+                    params:{
+                        itemPerPage:state.rawData.per_page,
+                        filter:state.filter
+                    }
                 }).then(function(response){
                     // console.log(response.data);
                     commit('fillRawData', response.data );

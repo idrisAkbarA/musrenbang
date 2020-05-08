@@ -3562,11 +3562,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["kelurahan_items", "pod_items", "usulan_items", "barisPerHalaman"])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['isItemsLoaded']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["kelurahan_items", "pod_items", "usulan_items", "barisPerHalaman"])),
+  watch: {
+    isItemsLoaded: function isItemsLoaded(value) {
+      if (value == true) {
+        this.kelurahan_items_final = this.kelurahan_items;
+        this.kelurahan_items_final.unshift('-');
+        console.log(this.kelurahan_items);
+      }
+    }
+  },
   data: function data() {
     return {
+      kelurahan_items_final: [],
+      toggle: false,
       filter: {
         jenis: null,
         tahun: null,
@@ -3579,30 +3604,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  methods: {
-    filterTest: function filterTest() {
-      var ini = this;
-      ini.overlayTable = true;
-      console.log(ini.rawData.per_page);
-      Axios({
-        method: "get",
-        url: "/usul/testFilter",
-        params: {
-          filter: ini.filter,
-          perPage: ini.rawData.per_page
-        }
-      }).then(function (response) {
-        ini.rawData = response.data;
-        ini.tableUsulan = ini.rawData.data;
-        console.log(response.data);
-        ini.overlayTable = false;
-      })["catch"](function (error) {
-        console.log(error);
-      });
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['getFilter', 'getTableUsulan']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['fillFilter']), {
+    filterGet: function filterGet() {
+      this.fillFilter(this.filter);
+      this.toggle = false;
+      this.getFilter(this.filter); // var ini = this;
+      // ini.overlayTable = true;
+      // // console.log(ini.rawData.per_page);
+      // axios({
+      //   method: "get",
+      //   url: "/usul/testFilter",
+      //   params: {
+      //     filter: ini.filter,
+      //     perPage: ini.barisPerHalaman
+      //   }
+      // })
+      //   .then(function(response) {
+      //     ini.rawData = response.data;
+      //     ini.tableUsulan = ini.rawData.data;
+      //     console.log(response.data);
+      //     ini.overlayTable = false;
+      //   })
+      //   .catch(function(error) {
+      //     console.log(error);
+      //   });
     },
     filterReset: function filterReset() {
+      this.fillFilter(null);
+      this.getTableUsulan(this.barisPerHalaman);
       this.filter = {
-        jenis: null,
+        jenis: "Non Fisik",
         tahun: null,
         usulan: null,
         pod: null,
@@ -3626,7 +3657,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log(tahunList);
       return tahunList;
     }
-  }
+  })
 });
 
 /***/ }),
@@ -44771,7 +44802,14 @@ var render = function() {
             ]
           }
         }
-      ])
+      ]),
+      model: {
+        value: _vm.toggle,
+        callback: function($$v) {
+          _vm.toggle = $$v
+        },
+        expression: "toggle"
+      }
     },
     [
       _vm._v(" "),
@@ -44820,7 +44858,7 @@ var render = function() {
                             attrs: { small: "", dark: "" },
                             on: {
                               click: function($event) {
-                                return _vm.filterTest()
+                                return _vm.filterGet()
                               }
                             }
                           },
@@ -44863,7 +44901,55 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "v-col",
-                    { attrs: { cols: "4" } },
+                    { attrs: { cols: "3" } },
+                    [
+                      _c("v-autocomplete", {
+                        attrs: {
+                          dense: "",
+                          "prepend-inner-icon": "map",
+                          outlined: "",
+                          items: _vm.kelurahan_items_final,
+                          label: "kelurahan"
+                        },
+                        model: {
+                          value: _vm.filter.kelurahan,
+                          callback: function($$v) {
+                            _vm.$set(_vm.filter, "kelurahan", $$v)
+                          },
+                          expression: "filter.kelurahan"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "2" } },
+                    [
+                      _c("v-autocomplete", {
+                        attrs: {
+                          dense: "",
+                          "prepend-inner-icon": "announcement",
+                          outlined: "",
+                          items: ["-", "Fisik", "Non Fisik"],
+                          label: "Jenis"
+                        },
+                        model: {
+                          value: _vm.filter.jenis,
+                          callback: function($$v) {
+                            _vm.$set(_vm.filter, "jenis", $$v)
+                          },
+                          expression: "filter.jenis"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "5" } },
                     [
                       _c("v-combobox", {
                         attrs: {
@@ -44911,7 +44997,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "v-col",
-                    { attrs: { cols: "4" } },
+                    { attrs: { cols: "6" } },
                     [
                       _c("v-text-field", {
                         attrs: {
@@ -44926,30 +45012,6 @@ var render = function() {
                             _vm.$set(_vm.filter, "alamat", $$v)
                           },
                           expression: "filter.alamat"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-col",
-                    { attrs: { cols: "2" } },
-                    [
-                      _c("v-autocomplete", {
-                        attrs: {
-                          dense: "",
-                          "prepend-inner-icon": "map",
-                          outlined: "",
-                          items: _vm.kelurahan_items,
-                          label: "kelurahan"
-                        },
-                        model: {
-                          value: _vm.filter.kelurahan,
-                          callback: function($$v) {
-                            _vm.$set(_vm.filter, "kelurahan", $$v)
-                          },
-                          expression: "filter.kelurahan"
                         }
                       })
                     ],
@@ -45745,7 +45807,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.volume))]),
                         _vm._v(" "),
-                        _c("td", [_vm._v("Air Hitam")]),
+                        _c("td", [_vm._v(_vm._s(item.kelurahan))]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.pod))]),
                         _vm._v(" "),
@@ -113168,7 +113230,9 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
     snackbar: false,
     snackbarText: "",
     snackbarColor: "",
-    isTableLoading: false
+    isTableLoading: false,
+    isItemsLoaded: false,
+    filter: null
   },
   getters: {
     rawData: function rawData(state) {
@@ -113211,6 +113275,10 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
     },
     toggleLoadingTable: function toggleLoadingTable(state) {
       state.isTableLoading = !state.isTableLoading;
+    },
+    fillFilter: function fillFilter(state, dataObj) {
+      state.filter = dataObj;
+      console.log(state.filter);
     }
   },
   actions: {
@@ -113218,6 +113286,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
       var commit = _ref.commit,
           dispatch = _ref.dispatch,
           state = _ref.state;
+      state.isItemsLoaded = false;
       var ini = this;
       axios__WEBPACK_IMPORTED_MODULE_2___default()({
         method: 'get',
@@ -113227,6 +113296,7 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
         // ini.pod_items = response.data['pod'];
         // ini.usulan_items = response.data['itemUsulan'];
 
+        state.isItemsLoaded = true;
         console.log("init data loaded!");
       })["catch"](function (error) {
         // console.log(error);
@@ -113266,9 +113336,29 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
       var commit = _ref3.commit;
       return new Promise(function (resolve, reject) {});
     },
-    updateTableUsulan: function updateTableUsulan(_ref4, dataObj) {
+    getFilter: function getFilter(_ref4, dataObj) {
       var commit = _ref4.commit,
-          state = _ref4.state;
+          getters = _ref4.getters;
+      // console.log(ini.rawData.per_page);
+      commit('toggleLoadingTable');
+      axios({
+        method: "get",
+        url: "/usul/testFilter",
+        params: {
+          filter: dataObj,
+          perPage: getters.barisPerHalaman
+        }
+      }).then(function (response) {
+        commit('fillRawData', response.data);
+        commit('toggleLoadingTable');
+      })["catch"](function (error) {
+        console.log(error);
+        commit('toggleLoadingTable');
+      });
+    },
+    updateTableUsulan: function updateTableUsulan(_ref5, dataObj) {
+      var commit = _ref5.commit,
+          state = _ref5.state;
       return new Promise(function (resolve, reject) {
         // if(dataObj.foto1){
         //     console.log("foto exist");
@@ -113302,37 +113392,26 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
         });
       });
     },
-    nextPage: function nextPage(_ref5) {
+    nextPage: function nextPage(_ref6) {
       var _this2 = this;
-
-      var commit = _ref5.commit,
-          state = _ref5.state;
-      return new Promise(function (resolve, reject) {
-        var ini = _this2;
-        axios__WEBPACK_IMPORTED_MODULE_2___default()({
-          method: 'get',
-          url: state.rawData.next_page_url + "&itemPerPage=" + state.rawData.per_page
-        }).then(function (response) {
-          // console.log(response.data);
-          commit('fillRawData', response.data);
-          console.log("table data loaded!"); // ini.overlayTable =false;
-
-          resolve(response);
-        })["catch"](function (error) {
-          reject(error);
-        });
-      });
-    },
-    prevPage: function prevPage(_ref6) {
-      var _this3 = this;
 
       var commit = _ref6.commit,
           state = _ref6.state;
       return new Promise(function (resolve, reject) {
-        var ini = _this3;
+        // if(state.filter !=null){
+        //     var url = state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page+"$filter="+JSON.stringify(state.filter);
+        // }else{
+        //     // var url = state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page;
+        // }
+        var url = state.rawData.next_page_url;
+        var ini = _this2;
         axios__WEBPACK_IMPORTED_MODULE_2___default()({
           method: 'get',
-          url: state.rawData.prev_page_url + "&itemPerPage=" + state.rawData.per_page
+          url: url,
+          params: {
+            itemPerPage: state.rawData.per_page,
+            filter: state.filter
+          }
         }).then(function (response) {
           // console.log(response.data);
           commit('fillRawData', response.data);
@@ -113344,9 +113423,35 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__
         });
       });
     },
-    updateStatus: function updateStatus(_ref7, obj) {
+    prevPage: function prevPage(_ref7) {
+      var _this3 = this;
+
       var commit = _ref7.commit,
-          getters = _ref7.getters;
+          state = _ref7.state;
+      return new Promise(function (resolve, reject) {
+        var ini = _this3;
+        var url = state.rawData.prev_page_url;
+        axios__WEBPACK_IMPORTED_MODULE_2___default()({
+          method: 'get',
+          url: url,
+          params: {
+            itemPerPage: state.rawData.per_page,
+            filter: state.filter
+          }
+        }).then(function (response) {
+          // console.log(response.data);
+          commit('fillRawData', response.data);
+          console.log("table data loaded!"); // ini.overlayTable =false;
+
+          resolve(response);
+        })["catch"](function (error) {
+          reject(error);
+        });
+      });
+    },
+    updateStatus: function updateStatus(_ref8, obj) {
+      var commit = _ref8.commit,
+          getters = _ref8.getters;
       //* update status ketika user "toggle" button status
       return new Promise(function (resolve, reject) {
         getters.tableUsulan[obj.index]["loading_" + obj.status] = true;

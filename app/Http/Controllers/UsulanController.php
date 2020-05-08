@@ -155,13 +155,25 @@ class UsulanController extends Controller
         $filterKeyArray = [];
         $filterValueArray = [];
         $finalFilter=[];
-        foreach ($filter as $key => $value) {
-            if($value !=null && $key !='tahun'){
-                array_push($filterKeyArray,$key);
-                array_push($filterValueArray,$value);
+        $test=[];
+        foreach ($filter as $key => $value) { 
+            if($value !=null && $key !='tahun' && $value!="-"){
+                $arrTemp = [];
+                array_push($arrTemp,"$key");
+                array_push($arrTemp,"like");
+                array_push($arrTemp,"%$value%");
+                array_push($finalFilter,$arrTemp);
+                
             }
         }
-        $finalFilter = array_combine($filterKeyArray,$filterValueArray);
+        // foreach ($filter as $key => $value) {
+        //     if($value !=null && $key !='tahun'){
+        //         array_push($filterKeyArray,$key);
+        //         array_push($filterValueArray,$value);
+                
+        //     }
+        // }
+        // $finalFilter = array_combine($filterKeyArray,$filterValueArray);
 
         if($tahun!=null && $tahun!="Semua"){
             $usul = Usulan::whereYear('created_at',$tahun)->where($finalFilter)->orderBy('id', 'desc')->paginate($perPage);

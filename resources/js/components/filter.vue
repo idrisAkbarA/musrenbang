@@ -3,6 +3,7 @@
     :close-on-content-click="false"
     offset-y
     :nudge-right="200"
+    v-model="toggle"
   >
     <template v-slot:activator="{ on }">
       <v-btn
@@ -40,7 +41,7 @@
                 Reset
               </v-btn>
               <v-btn
-                @click="filterTest()"
+                @click="filterGet()"
                 small
                 class="primary"
                 dark
@@ -68,7 +69,30 @@
             >
             </v-autocomplete>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="3">
+            <!-- :items="kelurahan_items" -->
+            <v-autocomplete
+              dense
+              v-model="filter.kelurahan"
+              prepend-inner-icon="map"
+              outlined
+              :items="kelurahan_items_final"
+              label="kelurahan"
+            >
+            </v-autocomplete>
+          </v-col>
+          <v-col cols="2">
+            <!-- :items="usulan_items" -->
+            <v-autocomplete
+              dense
+              prepend-inner-icon="announcement"
+              outlined
+              v-model="filter.jenis"
+              :items="['-','Fisik','Non Fisik']"
+              label="Jenis"
+            ></v-autocomplete>
+          </v-col>
+          <v-col cols="5">
             <!-- :items="usulan_items" -->
             <v-combobox
               dense
@@ -79,6 +103,7 @@
               label="Usulan"
             ></v-combobox>
           </v-col>
+          
           <v-col cols="6">
             <!-- :items="pod_items" -->
             <v-combobox
@@ -91,7 +116,7 @@
             >
             </v-combobox>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model="filter.alamat"
               outlined
@@ -101,18 +126,7 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="2">
-            <!-- :items="kelurahan_items" -->
-            <v-autocomplete
-              dense
-              v-model="filter.kelurahan"
-              prepend-inner-icon="map"
-              outlined
-              :items="kelurahan_items"
-              label="kelurahan"
-            >
-            </v-autocomplete>
-          </v-col>
+          
           <v-col cols="2">
             <v-autocomplete
               dense
@@ -153,16 +167,29 @@
 
 </template>
 ]<script>
-import { mapGetters } from "vuex";
+import { mapGetters,mapActions, mapMutations,mapState } from "vuex";
 export default {
   computed: {
-    ...mapGetters([      "kelurahan_items",
+    ...mapState(['isItemsLoaded']),
+    ...mapGetters([      
+      "kelurahan_items",
       "pod_items",
       "usulan_items",
-      "barisPerHalaman"])
+      "barisPerHalaman"]),
+  },
+  watch:{
+    isItemsLoaded:function(value){
+      if(value == true){
+        this.kelurahan_items_final = this.kelurahan_items;
+        this.kelurahan_items_final.unshift('-');
+        console.log(this.kelurahan_items);
+      } 
+    }
   },
   data() {
     return {
+      kelurahan_items_final:[],
+      toggle:false,
       filter: {
         jenis: null,
         tahun: null,
@@ -176,31 +203,38 @@ export default {
     };
   },
   methods: {
-    filterTest() {
-      var ini = this;
-      ini.overlayTable = true;
-      console.log(ini.rawData.per_page);
-      Axios({
-        method: "get",
-        url: "/usul/testFilter",
-        params: {
-          filter: ini.filter,
-          perPage: ini.rawData.per_page
-        }
-      })
-        .then(function(response) {
-          ini.rawData = response.data;
-          ini.tableUsulan = ini.rawData.data;
-          console.log(response.data);
-          ini.overlayTable = false;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+    ...mapActions(['getFilter','getTableUsulan']),
+    ...mapMutations(['fillFilter']),
+    filterGet() {
+      this.fillFilter(this.filter);
+      this.toggle = false;
+      this.getFilter(this.filter);
+      // var ini = this;
+      // ini.overlayTable = true;
+      // // console.log(ini.rawData.per_page);
+      // axios({
+      //   method: "get",
+      //   url: "/usul/testFilter",
+      //   params: {
+      //     filter: ini.filter,
+      //     perPage: ini.barisPerHalaman
+      //   }
+      // })
+      //   .then(function(response) {
+      //     ini.rawData = response.data;
+      //     ini.tableUsulan = ini.rawData.data;
+      //     console.log(response.data);
+      //     ini.overlayTable = false;
+      //   })
+      //   .catch(function(error) {
+      //     console.log(error);
+      //   });
     },
     filterReset() {
+      this.fillFilter(null);
+      this.getTableUsulan(this.barisPerHalaman);
       this.filter = {
-        jenis: null,
+        jenis: "Non Fisik",
         tahun: null,
         usulan: null,
         pod: null,
