@@ -159,10 +159,20 @@ class UsulanController extends Controller
         foreach ($filter as $key => $value) { 
             if($value !=null && $key !='tahun' && $value!="-"){
                 $arrTemp = [];
-                array_push($arrTemp,"$key");
-                array_push($arrTemp,"like");
-                array_push($arrTemp,"%$value%");
-                array_push($finalFilter,$arrTemp);
+                if($key == "jenis" && $value == "Fisik"){
+                    $arrTempKey = [];
+                    $arrTempValue = [];
+                    array_push($arrTempKey,$key);
+                    array_push($arrTempValue,$value);
+                    $arrCombined = array_combine($arrTempKey,$arrTempValue);
+                    array_push($arrTemp,$arrCombined);
+                    array_push($finalFilter,$arrTemp);
+                }else{
+                    array_push($arrTemp,"$key");
+                    array_push($arrTemp,"like");
+                    array_push($arrTemp,"%$value%");
+                    array_push($finalFilter,$arrTemp);
+                }
                 
             }
         }
