@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\POD;
+use App\pengumumans;
 use Illuminate\Http\Request;
 
-class PODController extends Controller
+class PengumumansController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,6 @@ class PODController extends Controller
     {
         //
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -43,10 +41,10 @@ class PODController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\POD  $pOD
+     * @param  \App\pengumumans  $pengumumans
      * @return \Illuminate\Http\Response
      */
-    public function show(POD $pOD)
+    public function show(pengumumans $pengumumans)
     {
         //
     }
@@ -54,10 +52,10 @@ class PODController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\POD  $pOD
+     * @param  \App\pengumumans  $pengumumans
      * @return \Illuminate\Http\Response
      */
-    public function edit(POD $pOD)
+    public function edit(pengumumans $pengumumans)
     {
         //
     }
@@ -66,52 +64,52 @@ class PODController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\POD  $pOD
+     * @param  \App\pengumumans  $pengumumans
      * @return \Illuminate\Http\Response
      */
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\pengumumans  $pengumumans
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(pengumumans $pengumumans)
+    {
+        //
+    }
+
     public function getData()
     {
-        $pod = POD::all();
-        // foreach ($pod as $key => $value) {
-        //     $pod[$key]['index'] = $key+1;
-        // }
-        return response()->json($pod);
+        $pod = pengumumans::all();
+        return response()->json($pod);  
     }
     public function add(Request $request)
     {
-        $pod = new pod;
+        $pod = new pengumumans;
         $pod->nama = $request['nama'];
+        $pod->isi = $request['isi'];
         $pod->save();
 
-        $result = pod::all();
+        $result = pengumumans::all();
         return response()->json($result);
     }
     public function update(Request $request)
     {
-        $pod = pod::find($request['id']);
+        $pod = pengumumans::find($request['id']);
         $pod->nama = $request['nama'];
+        $pod->isi = $request['isi'];
         $pod->save();
 
-        $result = pod::all();
+        $result = pengumumans::all();
         return response()->json($result);
     }
     public function DELETE(Request $request)
     {
-        $pod = pod::find($request['id']);
+        $pod = pengumumans::find($request['id']);
         $pod->delete();
 
-        $result = pod::all();
+        $result = pengumumans::all();
         return response()->json($result);
     }
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\POD  $pOD
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(POD $pOD)
-    {
-        //
-    }
+
 }

@@ -67,10 +67,6 @@ class ItemUsulanController extends Controller
      * @param  \App\ItemUsulan  $itemUsulan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ItemUsulan $itemUsulan)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -81,5 +77,39 @@ class ItemUsulanController extends Controller
     public function destroy(ItemUsulan $itemUsulan)
     {
         //
+    }
+    public function getData()
+    {
+        $pod = itemUsulan::all();
+        // foreach ($pod as $key => $value) {
+        //     $pod[$key]['index'] = $key+1;
+        // }
+        return response()->json($pod);
+    }
+    public function add(Request $request)
+    {
+        $usulan = new ItemUsulan;
+        $usulan->nama = $request['nama'];
+        $usulan->save();
+
+        $result = ItemUsulan::all();
+        return response()->json($result);
+    }
+    public function update(Request $request)
+    {
+        $usulan = ItemUsulan::find($request['id']);
+        $usulan->nama = $request['nama'];
+        $usulan->save();
+
+        $result = ItemUsulan::all();
+        return response()->json($result);
+    }
+    public function DELETE(Request $request)
+    {
+        $usulan = ItemUsulan::find($request['id']);
+        $usulan->delete();
+
+        $result = ItemUsulan::all();
+        return response()->json($result);
     }
 }

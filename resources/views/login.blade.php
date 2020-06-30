@@ -37,20 +37,21 @@
                 <v-container fluid fill-height>
                     <v-layout align-center justify-center>
                         <v-flex xs12 sm12 md6>
-                            <v-form lazy-validation="true">
+                            <v-form lazy-validation action="login" method="post" >
+                                @csrf
                                 <h2 class="white--text mb-4">Masuk</h2>
-                                <v-text-field {{-- background-color="white" --}} color="white" label="Nama Pengguna"
-                                    name="login" filled="true" prepend-inner-icon="account_box" type="text" dark
+                                <v-text-field color="white" label="Nama Pengguna"
+                                    name="name" filled prepend-inner-icon="account_box" type="text" dark
                                     required></v-text-field>
-                                <v-text-field {{-- background-color="white" --}} color="white" label="Kata sandi"
-                                    name="login" filled="true" prepend-inner-icon="lock" type="password" dark required
+                                <v-text-field  color="white" label="Kata sandi"
+                                    name="password" filled prepend-inner-icon="lock" type="password" dark required
                                     :append-icon="show1 ? 'visibility_off' : 'visibility'"
                                     @click:append="show1 = !show1" :type="show1 ? 'text' : 'password'">
                                 </v-text-field>
-                                <a href="/">
-                                    <v-btn @click="">
+                                
+                                    <v-btn type="submit">
                                         Masuk</v-btn>
-                                </a>
+                                
                                 {{-- <v-btn text dark>Lupa kata sandi?</v-btn> --}}
                             </v-form>
 

@@ -218,6 +218,31 @@
                   label="Kelurahan"
                 ></v-autocomplete>
               </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="12"
+              >
+                <v-card
+                  color="primary"
+                  dark             
+                  tile
+                  outlined>
+                  <v-card-text
+                    class="white--text"
+                  >
+                    <p>Untuk Akurasi data dan pemetaan usulan, mohon mengisi latitude dan longitude usulan dibawah atau cari lokasi dan geser marker sesuai tempat lokasi</p>
+
+                  </v-card-text>
+
+                </v-card>
+                <div
+                  ref="map"
+                  id="mapContainer"
+                  style="width:100%; height:300px;"
+                >
+                </div>
+              </v-col>
               <v-col cols="12">
                 <v-divider></v-divider>
               </v-col>
@@ -264,18 +289,7 @@
                   outlined
                 ></v-text-field>
               </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="12"
-              >
-                <GmapMap 
-                :center="{lat:10,lng:10}"
-                :zoom="7"
-                style="width:100%;height:360px;"
-                >
-                </GmapMap>
-              </v-col>
+
             </v-row>
           </v-container>
           <v-overlay :value="overlay">
@@ -305,6 +319,8 @@ import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
 export default {
+  mounted() {},
+
   props: {
     value: false
   },
@@ -329,6 +345,9 @@ export default {
     dialogFisik: {
       get: function() {
         console.log(this.value);
+        if (this.value == true) {
+          // this.setMap();
+        }
         return this.value;
       },
       set: function(value) {
@@ -337,8 +356,22 @@ export default {
       }
     }
   },
+  watch: {
+    dialogFisik: function() {
+      this.testConsole();
+      if (this.$props.value == true) {
+        // this.setMap();
+        console.log("anjing " + this.$props.value);
+      }
+    }
+  },
   data() {
     return {
+      lat: 0.506044,
+      long: 101.397726,
+      isMapCalled: false,
+      map: {},
+      platform: null,
       listFoto: [],
       listFile: [],
       loadingText: "memuat",
@@ -359,9 +392,6 @@ export default {
       hp_pengusul: "",
       alamat_pengusul: "",
       kelurahan: "",
-      // pod_items: [],
-      // usulan_items: [],
-      // kelurahan_items: [],
       jumlahFoto: 0,
       jumlahFile: 0,
       dropzoneOptions: {
@@ -402,11 +432,44 @@ export default {
       }
     };
   },
+  created() {
+    this.platform = new H.service.Platform({
+      app_id: "qTceDkYeN1H41J9FnN2n",
+      apikey: "MMJUx0m9wxG9hU7fleGImjzpwlF_U_8WjSt4wYNP3Gw"
+    });
+  },
+  updated() {
+    if (this.$props.value == true && this.isMapCalled == false) {
+      setTimeout(() => {
+        this.setMap();
+      }, 500);
+      console.log(this.$refs.map);
+    }
+  },
   methods: {
     ...mapActions({
       getTable: "getTableUsulan"
     }),
     ...mapMutations(["fillSnackbar", "toggleLoadingTable"]),
+    moveMapTo() {},
+    setMap() {
+      this.isMapCalled = true;
+
+      console.log("map called");
+      var ini = this;
+      console.log(ini.$refs.map);
+      const maptypes = this.platform.createDefaultLayers();
+
+      // Instantiate (and display) a map object:
+      this.map = new H.Map(ini.$refs.map, maptypes.vector.normal.map, {
+        zoom: 14,
+        center: { lng: this.long, lat: this.lat }
+      });
+      var behavior = new H.mapevents.Behavior(
+        new H.mapevents.MapEvents(this.map)
+      );
+      var ui = H.ui.UI.createDefault(this.map, maptypes);
+    },
     calcProgressValue(value, index) {
       if (value == null || value == "") {
         if (this.checkProgress[index] == 0) {

@@ -24,6 +24,7 @@ export default new Vuex.Store({
         kelurahan_items : state => state.items["kelurahan_items"],
         pod_items :state => state.items["pod_items"],
         usulan_items: state => state.items["usulan_items"],
+        isFilterFilled:state=>{state.filter != null ?true:false},
     },
     mutations: {
         fillRawData(state, data) {
@@ -159,11 +160,6 @@ export default new Vuex.Store({
         },
         nextPage({commit,state}){
             return new Promise((resolve,reject)=>{
-                // if(state.filter !=null){
-                //     var url = state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page+"$filter="+JSON.stringify(state.filter);
-                // }else{
-                //     // var url = state.rawData.next_page_url+"&itemPerPage="+state.rawData.per_page;
-                // }
                 var url = state.rawData.next_page_url;
                 var ini = this;
                 Axios({
@@ -224,27 +220,15 @@ export default new Vuex.Store({
             payload
             )
             .then(function (response) {
-                console.log(response.data);
-               
+                console.log(response.data);           
                     console.log(result);
                     getters.tableUsulan[obj.index][obj.status] = result;
                     getters.tableUsulan[obj.index]["loading_"+obj.status] = false;
                     resolve(response.data);
-                    // ini.snackbarText = "Status usulan berhasil diperbarui!"
-                    // ini.snackbarColor = "success"
-                    // ini.snackbar = true;
-         
-                    // ini.snackbarText = "Terjadi kesalahan, coba lagi"
-                    // ini.snackbarColor = "error"
-                    // ini.snackbar = true;
-                
               })
               .catch(function (error) {
                 console.log(error);
                 getters.tableUsulan[obj.index]["loading_"+obj.status] = false;
-                    // ini.snackbarText = "Terjadi kesalahan, coba lagi"
-                    // ini.snackbarColor = "error"
-                    // ini.snackbar = true;
                     reject(error);
               });
         })

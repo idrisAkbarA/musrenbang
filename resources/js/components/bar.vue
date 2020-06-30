@@ -21,6 +21,7 @@
     <v-btn
       text
       color="grey darken-1"
+      @click="logout"
     >
       <v-icon left>logout</v-icon><span>Keluar</span>
     </v-btn>
@@ -48,6 +49,14 @@ export default {
                 this.$emit('drawerClicked', value)
             }
         }
+    },
+    methods:{
+      logout(){
+        console.log("im called")
+        axios.get("/logout").then(()=>{
+          window.location = "login"
+        });
+      }
     }
 };
 </script>

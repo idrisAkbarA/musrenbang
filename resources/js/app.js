@@ -15,16 +15,12 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import store from './store';
 Vue.use(Vuetify)
 import Vuesax from 'vuesax'
-import * as VueGoogleMaps from 'vue2-google-maps'
+
 import 'vuesax/dist/vuesax.css' //Vuesax styles
 Vue.use(Vuesax, {
   // options here
 })
-Vue.use(VueGoogleMaps, {
-    load: {
-      key: 'AIzaSyBiqTv6KF4e1kv9s_JNvnC70qUAFd1kBg0',
-    },
-  })
+
 
   
 
@@ -43,6 +39,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('drawer', require('./components/drawer.vue').default);
 Vue.component('toolbar', require('./components/toolbar.vue').default);
 Vue.component('timeline', require('./components/timeline.vue').default);
+Vue.component('timeline-admin', require('./components/timelineAdmin.vue').default);
 Vue.component('musrenbang', require('./components/musrenbang.vue').default);
 Vue.component('bar', require('./components/bar.vue').default);
 Vue.component('tambah-usulan', require('./components/tambah-usulan.vue').default);
@@ -52,6 +49,10 @@ Vue.component('edit-fisik', require('./components/EditFisik.vue').default);
 Vue.component('edit-non-fisik', require('./components/EditNonFisik.vue').default);
 Vue.component('fisik', require('./components/fisik.vue').default);
 Vue.component('non-fisik', require('./components/nonFisik.vue').default);
+Vue.component('change-pass', require('./components/changePass.vue').default);
+Vue.component('opd', require('./components/opd.vue').default);
+Vue.component('usulan', require('./components/usulan.vue').default);
+Vue.component('kelurahan', require('./components/kelurahan.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -888,6 +889,26 @@ const app = new Vue({
         musrenbang(){
             this.transitionFunction(function() {
                 window.location.href = '/musrenbang';
+            });
+        },
+        musrenbang_admin(){
+            this.transitionFunction(function() {
+                window.location.href = '/musrenbang-admin';
+            });
+        },
+        kelurahan_page(){
+            this.transitionFunction(function() {
+                window.location.href = '/kelurahan';
+            });
+        },
+        opd(){
+            this.transitionFunction(function() {
+                window.location.href = '/opd';
+            });
+        },
+        usulan_page(){
+            this.transitionFunction(function() {
+                window.location.href = '/usulan';
             });
         },
         pengumuman(){

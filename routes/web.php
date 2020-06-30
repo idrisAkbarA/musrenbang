@@ -10,9 +10,35 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::get('/pegumuman/items', 'PengumumansController@getData');
+Route::get('/pegumuman/update', 'PengumumansController@update');
+Route::get('/pegumuman/delete', 'PengumumansController@delete');
+Route::get('/pegumuman/add', 'PengumumansController@add');
+
+Route::get('/usulan/items', 'ItemUsulanController@getData');
+Route::get('/usulan/update', 'ItemUsulanController@update');
+Route::get('/usulan/delete', 'ItemUsulanController@delete');
+Route::get('/usulan/add', 'ItemUsulanController@add');
+
+Route::get('/opd/items', 'PODController@getData');
+Route::get('/opd/update', 'PODController@update');
+Route::get('/opd/delete', 'PODController@delete');
+Route::get('/opd/add', 'PODController@add');
+
 Route::get('/musrenbang-admin', function(){
     return view('musrenbang-admin');
-});
+})->middleware('admin');
+Route::get('/opd', function(){
+    return view('opd');
+})->middleware('admin');
+Route::get('/kelurahan', function(){
+    return view('kelurahan');
+})->middleware('admin');
+Route::get('/usulan', function(){
+    return view('usulan');
+})->middleware('admin');
 Route::get('/experiment', function () {
     return view('experiment');
 });
@@ -21,11 +47,22 @@ Route::get('/', function () {
 });
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
+Route::post('/login', "AuthController@login");
+Route::get('/logout', "AuthController@logout");
+Route::post('/changepass', "AuthController@changepass");
 Route::get('/testVuex', function () {
     return view('testVuex');
 });
-Route::get('/musrenbang', 'UsulanController@index');
+route::get('/oops',function(){
+    return view('notAuthorized');
+});
+route::get('/test-session',function(){
+    // $user = Auth::user();
+    // session(['user' => $user->name]);
+    return session()->all();
+});
+Route::get('/musrenbang', 'UsulanController@index')->middleware('user');
 Route::get('/init', 'UsulanController@init');
 Route::get('/musrenbang-test', function () {
     return view('musrenbang-test');

@@ -99,6 +99,6 @@ class initUsulan extends Command
             $usulan->save();
         }
         echo "50 usulan berhasil disimpan!". "\n";
-        echo "Inisiasi DB berhasil!". "\n";
+        
     }
 }

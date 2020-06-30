@@ -3,22 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
-class initAll extends Command
+use App\Pengumumans;
+use Faker\Factory as Faker;
+class initPengumuman extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'initAll';
+    protected $signature = 'initPengumuman';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Isi semua record penting seperti user, opd, kelurahan, usulan dll';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -37,13 +38,13 @@ class initAll extends Command
      */
     public function handle()
     {
-        // \Artisan::call('migrate:fresh');
-        // // sleep(3);
-        //  \Artisan::call('initAll');
-        $this->call('migrate:fresh');
-        $this->call('initDB');
-        $this->call('initUsulan');
-        $this->call('initPengumuman');
-        echo "Inisiasi DB berhasil!". "\n";
+        $faker = Faker::create("id_ID");
+        for ($i=0; $i < 10 ; $i++) { 
+            $pengumuman = new pengumumans;
+            $pengumuman->nama = $faker->sentence;
+            $pengumuman->save();
+            # code...
+        }
+        echo "Inisiasi pengumuman berhasil!". "\n";
     }
 }

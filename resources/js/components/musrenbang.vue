@@ -175,24 +175,19 @@
       </v-row>
     </div>
     <v-dialog
-      width="400"
+      width="450"
       v-model="dialogDelete"
     >
       <v-card>
-        <v-card-title class=" error">
-          <v-icon color="white">
+        <v-card-title class="delete-header">
+          <v-icon color="black">
             delete
           </v-icon>
-          <span class="white--text">
+          <span>
             Hapus Usulan
           </span>
-        </v-card-title>
-        <v-card-text class="mt-2">
-          Apakah anda yakin ingin menghapus usulan?
-        </v-card-text>
-        <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
+            <v-btn
             text
             @click="dialogDelete = false"
           >
@@ -201,12 +196,15 @@
           <v-btn
             dark
             class="error"
-            @click="deleteUsulanConfirmed"
+            @click="deleteUsulanConfirmed()"
           >
             <v-icon left> delete</v-icon>
             Hapus
           </v-btn>
-        </v-card-actions>
+        </v-card-title>
+        <v-card-text class="mt-2">
+          Apakah anda yakin ingin menghapus usulan?
+        </v-card-text>
       </v-card>
     </v-dialog>
     <v-snackbar
@@ -238,10 +236,6 @@ export default {
     this.getTable(15).then(function(response) {
       console.log("yeay!");
     });
-    // .catch(function(error) {
-    //   console.log(" wak error ");
-    //   ini.getTable(15);
-    // });
     this.loadInitData();
   },
   computed: {
@@ -824,5 +818,10 @@ th {
 
 body::-webkit-scrollbar {
   display: none;
+}
+.delete-header {
+  background: linear-gradient(-90deg, rgb(255, 70, 70), rgb(255, 255, 255));
+  background-position: 50px 0px;
+  background-repeat: no-repeat;
 }
 </style>

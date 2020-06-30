@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('pengumuman')//highlight link yg dipilih di sidebar
+@section('musrenbang')//highlight link yg dipilih di sidebar
     green lighten-5
 @endsection
 @section('bar-components')

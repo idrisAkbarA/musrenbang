@@ -9,5 +9,9 @@
     <tambah-usulan></tambah-usulan>
 @endsection
 @section('content')
-    <timeline></timeline>
+    @if (Session::get('user') == "Administrator")
+        <timeline-admin></timeline-admin>
+    @else
+        <timeline></timeline>
+    @endif
 @endsection
