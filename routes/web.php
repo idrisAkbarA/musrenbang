@@ -11,11 +11,15 @@
 |
 */
 
+Route::get('/kelurahan/items', 'KelurahanController@getData');
+Route::get('/kelurahan/update', 'KelurahanController@update');
+Route::get('/kelurahan/delete', 'KelurahanController@delete');
+Route::get('/kelurahan/add', 'KelurahanController@add');
 
-Route::get('/pegumuman/items', 'PengumumansController@getData');
-Route::get('/pegumuman/update', 'PengumumansController@update');
-Route::get('/pegumuman/delete', 'PengumumansController@delete');
-Route::get('/pegumuman/add', 'PengumumansController@add');
+Route::get('/pengumuman/items', 'PengumumansController@getData');
+Route::get('/pengumuman/update', 'PengumumansController@update');
+Route::get('/pengumuman/delete', 'PengumumansController@delete');
+Route::get('/pengumuman/add', 'PengumumansController@add');
 
 Route::get('/usulan/items', 'ItemUsulanController@getData');
 Route::get('/usulan/update', 'ItemUsulanController@update');

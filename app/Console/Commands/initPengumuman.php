@@ -42,6 +42,7 @@ class initPengumuman extends Command
         for ($i=0; $i < 10 ; $i++) { 
             $pengumuman = new pengumumans;
             $pengumuman->nama = $faker->sentence;
+            $pengumuman->isi = $faker->text;
             $pengumuman->save();
             # code...
         }

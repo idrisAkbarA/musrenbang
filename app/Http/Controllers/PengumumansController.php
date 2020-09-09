@@ -80,7 +80,7 @@ class PengumumansController extends Controller
 
     public function getData()
     {
-        $pod = pengumumans::all();
+        $pod = pengumumans::orderBy('id', 'DESC')->get();
         return response()->json($pod);  
     }
     public function add(Request $request)
@@ -90,7 +90,7 @@ class PengumumansController extends Controller
         $pod->isi = $request['isi'];
         $pod->save();
 
-        $result = pengumumans::all();
+        $result = pengumumans::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     public function update(Request $request)
@@ -100,7 +100,7 @@ class PengumumansController extends Controller
         $pod->isi = $request['isi'];
         $pod->save();
 
-        $result = pengumumans::all();
+        $result = pengumumans::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     public function DELETE(Request $request)
@@ -108,7 +108,7 @@ class PengumumansController extends Controller
         $pod = pengumumans::find($request['id']);
         $pod->delete();
 
-        $result = pengumumans::all();
+        $result = pengumumans::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
 

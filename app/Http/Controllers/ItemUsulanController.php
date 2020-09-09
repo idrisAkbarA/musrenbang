@@ -80,7 +80,7 @@ class ItemUsulanController extends Controller
     }
     public function getData()
     {
-        $pod = itemUsulan::all();
+        $pod = ItemUsulan::orderBy('id', 'DESC')->get();
         // foreach ($pod as $key => $value) {
         //     $pod[$key]['index'] = $key+1;
         // }
@@ -92,7 +92,7 @@ class ItemUsulanController extends Controller
         $usulan->nama = $request['nama'];
         $usulan->save();
 
-        $result = ItemUsulan::all();
+        $result = ItemUsulan::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     public function update(Request $request)
@@ -101,7 +101,7 @@ class ItemUsulanController extends Controller
         $usulan->nama = $request['nama'];
         $usulan->save();
 
-        $result = ItemUsulan::all();
+        $result = ItemUsulan::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     public function DELETE(Request $request)
@@ -109,7 +109,7 @@ class ItemUsulanController extends Controller
         $usulan = ItemUsulan::find($request['id']);
         $usulan->delete();
 
-        $result = ItemUsulan::all();
+        $result = ItemUsulan::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
 }

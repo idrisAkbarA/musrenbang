@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="d-flex flex-row mb-5" style="width:100%" >
+    <div
+      class="d-flex flex-row mb-5"
+      style="width:100%"
+    >
       <v-icon>
         account_balance
       </v-icon>
@@ -19,7 +22,6 @@
       transition="fade-transition"
     >
       <div>
-
         <v-data-table
           class="elevation-10"
           :fixed-header="true"
@@ -31,15 +33,17 @@
           :items-per-page="itemsPerPage"
           @page-count="pageCount = $event"
         >
-
           <template v-slot:item.nama="{ item }">
-           
-                <div
-                 
-                  class="d-flex flex-row"
-                  style="width:100%"
-                > <v-tooltip top open-delay="500" v-model="item.tooltip">
-              <template v-slot:activator="{ on, attrs }">
+            <div
+              class="d-flex flex-row"
+              style="width:100%"
+            >
+              <v-tooltip
+                top
+                open-delay="500"
+                v-model="item.tooltip"
+              >
+                <template v-slot:activator="{ on, attrs }">
                   <input
                     v-bind="attrs"
                     v-on="on"
@@ -52,37 +56,35 @@
                     v-model="item.nama"
                     spellcheck="false"
                   >
-                   </template>
-              <span>Click untuk meng-edit item</span>
-            </v-tooltip>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    text
-                    :ref="'rowB'+item.index"
-                    class="ml-1"
-                    :class="{ 'opacity-0': !item.isShown }"
-                    @click="batal(item)"
-                  >
-                    batal
-                  </v-btn>
-                  <v-btn
-                    :disabled="item.isDisabled"
-                    :class="{ 'opacity-0': !item.isShown }"
-                    class="ml-1"
-                    color="primary"
-                    @click="simpan(item)"
-                  >
-                    Simpan
-                  </v-btn>
-                  <v-btn
-                    icon
-                    @click="deleteItem(item)"
-                  >
-                    <v-icon>delete</v-icon>
-                  </v-btn>
-                </div>
-             
-
+                </template>
+                <span>Click untuk meng-edit item</span>
+              </v-tooltip>
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                :ref="'rowB'+item.index"
+                class="ml-1"
+                :class="{ 'opacity-0': !item.isShown }"
+                @click="batal(item)"
+              >
+                batal
+              </v-btn>
+              <v-btn
+                :disabled="item.isDisabled"
+                :class="{ 'opacity-0': !item.isShown }"
+                class="ml-1"
+                color="primary"
+                @click="simpan(item)"
+              >
+                Simpan
+              </v-btn>
+              <v-btn
+                icon
+                @click="deleteItem(item)"
+              >
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </div>
           </template>
         </v-data-table>
         <div>
@@ -176,8 +178,13 @@
             Tambah
           </v-btn>
         </v-card-title>
-        <v-card-text >
-         <v-text-field class="mt-8" v-model="tambahField" outlined label="Nama OPD"></v-text-field>
+        <v-card-text>
+          <v-text-field
+            class="mt-8"
+            v-model="tambahField"
+            outlined
+            label="Nama OPD"
+          ></v-text-field>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -217,11 +224,10 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-        <v-snackbar
+    <v-snackbar
       v-model="sn"
       :color="snackbarColor"
       dark
-      
     >
       {{ snackbarText }}
       <v-btn
@@ -264,11 +270,16 @@ export default {
       dialogDelete: false,
       dialogTambah: false,
       itemtoDelete: "",
-      tambahField:'',
+      tambahField: ""
     };
   },
   computed: {
-    ...mapState(["snackbar", "snackbarColor", "snackbarText", "isTableLoading"]),
+    ...mapState([
+      "snackbar",
+      "snackbarColor",
+      "snackbarText",
+      "isTableLoading"
+    ]),
     sn: {
       get: function() {
         console.log(this.snackbar);
@@ -277,40 +288,66 @@ export default {
       set: function(value) {
         this.fillSnackbar({ snackbar: value, color: "", text: "" });
       }
-    },
+    }
   },
   beforeMount() {
     this.getData();
   },
   methods: {
     ...mapMutations(["fillSnackbar", "toggleLoadingTable"]),
-    tambah(){
+    tambah() {
       this.toggleLoadingTable();
-      axios.get(this.baseUrl + "add",{ params:{
-        nama:this.tambahField
-      }}).then(response=>{
-        this.initData(response);
-        this.fillSnackbar({ snackbar: true, color: "success", text: "Item berhasil di tambahkan!" });
-        this.toggleLoadingTable();
-        this.dialogTambah = false;
-      }).catch(error=>{
-        this.fillSnackbar({ snackbar: true, color: "error", text: "Terjadi kesalahan, coba lagi!" });
-      })
+      axios
+        .get(this.baseUrl + "add", {
+          params: {
+            nama: this.tambahField
+          }
+        })
+        .then(response => {
+          this.initData(response);
+          this.fillSnackbar({
+            snackbar: true,
+            color: "success",
+            text: "Item berhasil di tambahkan!"
+          });
+          this.toggleLoadingTable();
+          this.dialogTambah = false;
+        })
+        .catch(error => {
+          this.fillSnackbar({
+            snackbar: true,
+            color: "error",
+            text: "Terjadi kesalahan, coba lagi!"
+          });
+        });
     },
     deleteConfirmed() {
       this.toggleLoadingTable();
-      axios.get(this.baseUrl + "delete",{params:{
-        id: this.itemtoDelete.id
-      }}).then(response=>{
-        this.initData(response);
-        this.toggleLoadingTable();
-        this.fillSnackbar({ snackbar: true, color: "success", text: "Item berhasil di hapus!" });
-        this.dialogDelete = false;
-      }).catch(error=>{
-        this.initData();
-        this.toggleLoadingTable();
-        this.fillSnackbar({ snackbar: true, color: "error", text: "Terjadi kesalahan! coba lagi" });
-      })
+      axios
+        .get(this.baseUrl + "delete", {
+          params: {
+            id: this.itemtoDelete.id
+          }
+        })
+        .then(response => {
+          this.initData(response);
+          this.toggleLoadingTable();
+          this.fillSnackbar({
+            snackbar: true,
+            color: "success",
+            text: "Item berhasil di hapus!"
+          });
+          this.dialogDelete = false;
+        })
+        .catch(error => {
+          this.initData();
+          this.toggleLoadingTable();
+          this.fillSnackbar({
+            snackbar: true,
+            color: "error",
+            text: "Terjadi kesalahan! coba lagi"
+          });
+        });
     },
     deleteItem(item) {
       this.dialogDelete = true;
@@ -369,12 +406,20 @@ export default {
           this.initData(response);
           this.toggleLoadingTable();
 
-          this.fillSnackbar({ snackbar: true, color: "success", text: "Item berhasil di update!" });
-        this.dialogDelete = false;
+          this.fillSnackbar({
+            snackbar: true,
+            color: "success",
+            text: "Item berhasil di update!"
+          });
+          this.dialogDelete = false;
         })
         .catch(error => {
-          this.fillSnackbar({ snackbar: true, color: "success", text: "Item berhasil di update!" });
-        this.dialogDelete = false;
+          this.fillSnackbar({
+            snackbar: true,
+            color: "success",
+            text: "Item berhasil di update!"
+          });
+          this.dialogDelete = false;
         });
     },
     getData() {

@@ -71,7 +71,7 @@ class PODController extends Controller
      */
     public function getData()
     {
-        $pod = POD::all();
+        $pod = pod::orderBy('id', 'DESC')->get();
         // foreach ($pod as $key => $value) {
         //     $pod[$key]['index'] = $key+1;
         // }
@@ -83,7 +83,7 @@ class PODController extends Controller
         $pod->nama = $request['nama'];
         $pod->save();
 
-        $result = pod::all();
+        $result = pod::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     public function update(Request $request)
@@ -92,7 +92,7 @@ class PODController extends Controller
         $pod->nama = $request['nama'];
         $pod->save();
 
-        $result = pod::all();
+        $result = pod::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     public function DELETE(Request $request)
@@ -100,7 +100,7 @@ class PODController extends Controller
         $pod = pod::find($request['id']);
         $pod->delete();
 
-        $result = pod::all();
+        $result = pod::orderBy('id', 'DESC')->get();
         return response()->json($result);
     }
     

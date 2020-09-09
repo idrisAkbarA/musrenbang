@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Kelurahan;
+use App\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 class KelurahanController extends Controller
 {
     /**
@@ -67,9 +68,67 @@ class KelurahanController extends Controller
      * @param  \App\Kelurahan  $kelurahan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kelurahan $kelurahan)
+    public function getData()
     {
-        //
+        $pod = kelurahan::orderBy('id', 'DESC')->get();
+        // foreach ($pod as $key => $value) {
+        //     $pod[$key]['index'] = $key+1;
+        // }
+        return response()->json($pod);
+    }
+    public function add(Request $request)
+    {
+        $pod = new kelurahan;
+        $pod->nama = $request['nama'];
+        $pod->save();
+
+        $getIdkel = kelurahan::where('nama', $request['nama'])->first();
+        $idkel = $getIdkel->id;
+        
+        $trimmedNama = strtolower(preg_replace('/\s+/', '', $request['nama']));
+        $user = new User;
+        $user->name = $trimmedNama;
+        $user->id_kel = $idkel;
+        if($request['password']==""){
+            $user->password = Hash::make($trimmedNama . '123');
+        }else{
+            $user->password = Hash::make($request['password']);
+        }
+        $user->save();
+        $result = kelurahan::orderBy('id', 'DESC')->get();
+         
+        return response()->json($result);
+    }
+    public function update(Request $request)
+    {
+        $pod = kelurahan::find($request['id']);
+        $pod->nama = $request['nama'];
+        $pod->save();
+
+        $user = user::where('id_kel',$request['id'])->first();
+        $user->name = strtolower(preg_replace('/\s+/', '', $request['nama']));
+        $user->save();
+        
+        $result = kelurahan::orderBy('id', 'DESC')->get();
+        return response()->json($result);
+    }
+    public function updatePass(Request $request)
+    {
+        $user = user::where('id_kel',$request['id'])->first();
+        
+        $user->save();
+
+        $result = kelurahan::orderBy('id', 'DESC')->get();
+        return response()->json($result);
+    }
+    public function DELETE(Request $request)
+    {
+        $pod = kelurahan::find($request['id']);
+        $pod->delete();
+        $user = user::where('id_kel',$request['id'])->first()->delete();
+
+        $result = kelurahan::orderBy('id', 'DESC')->get();
+        return response()->json($result);
     }
 
     /**
@@ -82,4 +141,6 @@ class KelurahanController extends Controller
     {
         //
     }
+
+
 }

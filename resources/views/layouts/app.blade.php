@@ -135,14 +135,14 @@
                          </template>
                     </change-pass>
                     
-                    <v-list-item @click="" class="@yield('tanyaJawab')">
+                    {{-- <v-list-item @click="" class="@yield('tanyaJawab')">
                         <v-list-item-action>
                             <v-icon color="grey darken-1">contact_support</v-icon>
                         </v-list-item-action>
                         <v-list-item-content>
                             <v-list-item-title class="">Tanya Jawab</v-list-item-title>
                         </v-list-item-content>
-                    </v-list-item>
+                    </v-list-item> --}}
 
                 </v-list>
             </v-navigation-drawer>
